@@ -111,6 +111,22 @@ npm run build
 
 Make sure `NEXT_PUBLIC_` prefix is used for client-side Firebase variables.
 
+### `auth/invalid-api-key` on Vercel (page fails to load)
+
+This means the browser build has no valid Firebase Web API key. Fix:
+
+1. **Vercel → your project → Settings → Environment Variables**  
+   Add every variable from `.env.example` under **Production** (and **Preview** if you use preview URLs). Names must match exactly (including `NEXT_PUBLIC_`).
+
+2. **Redeploy**  
+   `NEXT_PUBLIC_*` values are baked in at **build** time. After adding or fixing variables, run **Deployments → … → Redeploy** (or push a new commit). Editing env alone does not update an old deployment.
+
+3. **Firebase Console → Authentication → Settings → Authorized domains**  
+   Add `suri-learning.vercel.app` and your custom domain if any (required for Google sign-in).
+
+4. **CLI (optional)**  
+   If `vercel whoami` fails, run `vercel login`, then `vercel link` in this repo and `vercel env pull .env.local` to verify local parity.
+
 ### Gemini API Errors
 
 Verify `GEMINI_API_KEY` is set in environment variables (without prefix for server-side).
