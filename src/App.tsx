@@ -85,6 +85,9 @@ import { doc, getDoc, setDoc, onSnapshot, collection, query, orderBy, limit } fr
 const QuizView = lazy(() => import('./views/QuizView').then(m => ({ default: m.QuizView })));
 const ProfileView = lazy(() => import('./views/ProfileView').then(m => ({ default: m.ProfileView })));
 const LeaderboardView = lazy(() => import('./views/LeaderboardView').then(m => ({ default: m.LeaderboardView })));
+const SettingsView = lazy(() => import('./views/SettingsView').then(m => ({ default: m.SettingsView })));
+const LessonCompleteView = lazy(() => import('./views/LessonCompleteView').then(m => ({ default: m.LessonCompleteView })));
+const AIChatView = lazy(() => import('./views/AIChatView').then(m => ({ default: m.AIChatView })));
 
 // Import components
 import { useAppToast } from './components/ToastProvider';
@@ -170,13 +173,14 @@ function AppContent() {
   // Toast notification system
   const { showToast } = useAppToast();
   
-  const [view, setView] = useState<'roadmap' | 'learn' | 'review' | 'quiz' | 'finished' | 'profile' | 'notebook' | 'grammar_theory' | 'daily_plan' | 'micro_skills' | 'micro_skill_detail' | 'leaderboard' | 'ai_lab' | 'ai_writing' | 'ai_chat' | 'match_game'>('roadmap');
+  const [view, setView] = useState<'roadmap' | 'learn' | 'review' | 'quiz' | 'finished' | 'profile' | 'notebook' | 'grammar_theory' | 'daily_plan' | 'micro_skills' | 'micro_skill_detail' | 'leaderboard' | 'ai_lab' | 'ai_writing' | 'ai_chat' | 'match_game' | 'settings' | 'lesson_complete'>('roadmap');
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [quizState, setQuizState] = useState<QuizState | null>(null);
   const [learnWords, setLearnWords] = useState<Word[]>([]);
   const [learnIndex, setLearnIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [sessionReviewWords, setSessionReviewWords] = useState<Word[]>([]);
+  const [dailyGoal, setDailyGoal] = useState(5);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -1962,92 +1966,36 @@ function AppContent() {
   };
 
   const renderAIChat = () => {
-    const handleSendMessage = async () => {
-      if (!aiChatInput.trim() || isAiLoading) return;
-      
-      const userMessage = { role: 'user' as const, parts: [{ text: aiChatInput }] };
-      const newMessages = [...aiChatMessages, userMessage];
-      setAiChatMessages(newMessages);
-      setAiChatInput('');
-      setIsAiLoading(true);
-
-      try {
-        const aiResponse = await generateAIChatResponse(newMessages, aiChatTopic);
-        setAiChatMessages([...newMessages, { role: 'model' as const, parts: [{ text: aiResponse }] }]);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsAiLoading(false);
-      }
-    };
-
     return (
-      <div className="min-h-screen bg-bg flex flex-col max-w-2xl mx-auto">
-        <div className="p-6 flex items-center gap-4 bg-white border-b border-ink/5 sticky top-0 z-40">
-          <button onClick={() => setView('ai_lab')} className="w-10 h-10 rounded-xl flex items-center justify-center text-ink-muted hover:bg-ink/5">
-            <X size={24} />
-          </button>
-          <div className="flex-1">
-            <h1 className="text-xl font-black text-ink font-display tracking-tight uppercase">AI Chat Partner</h1>
-            <p className="text-[10px] font-black text-brand-orange uppercase tracking-widest">Topic: {aiChatTopic}</p>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-          {aiChatMessages.length === 0 && (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-10 opacity-50">
-              <div className="w-20 h-20 bg-brand-orange/10 text-brand-orange rounded-full flex items-center justify-center mb-6">
-                <MessageCircle size={40} />
-              </div>
-              <p className="text-ink font-bold text-lg">Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn chào hỏi!</p>
-              <p className="text-ink-muted text-sm mt-2">AI sẽ giúp bạn luyện tập phản xạ và sửa lỗi ngữ pháp.</p>
-            </div>
-          )}
-          {aiChatMessages.map((msg, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`max-w-[85%] p-5 rounded-[2rem] font-medium text-lg ${
-                msg.role === 'user' 
-                  ? 'bg-brand-blue text-white self-end rounded-tr-none' 
-                  : 'bg-white border-2 border-ink/5 text-ink self-start rounded-tl-none shadow-sm'
-              }`}
-            >
-              <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
-            </motion.div>
-          ))}
-          {isAiLoading && (
-            <div className="bg-white border-2 border-ink/5 text-ink self-start rounded-[2rem] rounded-tl-none p-5 shadow-sm flex gap-2">
-              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-2 h-2 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-          )}
-        </div>
-
-        <div className="p-6 bg-white border-t border-ink/5 sticky bottom-0">
-          <div className="relative flex items-center gap-3">
-            <input
-              type="text"
-              value={aiChatInput}
-              onChange={(e) => setAiChatInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Type your message..."
-              className="flex-1 bg-bg border-2 border-ink/5 rounded-2xl py-4 px-6 font-bold text-ink outline-none focus:border-brand-blue focus:bg-white transition-all"
-            />
-            <button
-              onClick={handleSendMessage}
-              disabled={!aiChatInput.trim() || isAiLoading}
-              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                aiChatInput.trim() && !isAiLoading ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20' : 'bg-ink/5 text-ink-muted'
-              }`}
-            >
-              <Send size={24} />
-            </button>
-          </div>
-        </div>
-      </div>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-purple rounded-full animate-spin" /></div>}>
+        <AIChatView
+          messages={aiChatMessages}
+          input={aiChatInput}
+          onInputChange={setAiChatInput}
+          onSend={async () => {
+            if (!aiChatInput.trim() || isAiLoading) return;
+            const userMessage = { role: 'user' as const, parts: [{ text: aiChatInput }] };
+            const newMessages = [...aiChatMessages, userMessage];
+            setAiChatMessages(newMessages);
+            setAiChatInput('');
+            setIsAiLoading(true);
+            try {
+              const aiResponse = await generateAIChatResponse(newMessages, aiChatTopic);
+              setAiChatMessages([...newMessages, { role: 'model' as const, parts: [{ text: aiResponse }] }]);
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsAiLoading(false);
+            }
+          }}
+          onBack={() => setView('ai_lab')}
+          topic={aiChatTopic}
+          isLoading={isAiLoading}
+          isListening={isListening}
+          onToggleListening={() => setIsListening(!isListening)}
+          onTopicChange={setAiChatTopic}
+        />
+      </Suspense>
     );
   };
 
@@ -2677,6 +2625,7 @@ function AppContent() {
         user={user}
         stats={stats}
         onLogout={logout}
+        onOpenSettings={() => setView('settings')}
       />
     );
   };
@@ -3040,6 +2989,31 @@ function AppContent() {
       {view === 'ai_writing' && renderAIWriting()}
       {view === 'ai_chat' && renderAIChat()}
       {view === 'match_game' && renderMatchGame()}
+      {view === 'settings' && (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-orange rounded-full animate-spin" /></div>}>
+          <SettingsView
+            onBack={() => setView('profile')}
+            onLogout={logout}
+            dailyGoal={dailyGoal}
+            onDailyGoalChange={(n) => {
+              setDailyGoal(n);
+              if (user) {
+                setDoc(doc(db, 'users', user.uid), { dailyGoal: n }, { merge: true }).catch(console.error);
+              }
+            }}
+          />
+        </Suspense>
+      )}
+      {view === 'lesson_complete' && (
+        <LessonCompleteView
+          stats={stats}
+          xpGained={25}
+          wordsLearned={3}
+          accuracy={78}
+          onContinue={() => setView('quiz')}
+          onGoHome={() => setView('roadmap')}
+        />
+      )}
 
       {/* AI Explanation Modal */}
       <AnimatePresence>

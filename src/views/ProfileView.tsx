@@ -9,6 +9,7 @@ export interface ProfileViewProps {
   user: User | null;
   stats: UserStats;
   onLogout: () => void;
+  onOpenSettings?: () => void;
 }
 
 const RankIcon = ({ icon, className, size }: { icon: string; className?: string; size?: number }) => {
@@ -26,14 +27,14 @@ const RankIcon = ({ icon, className, size }: { icon: string; className?: string;
   return <IconComponent className={className} size={size} />;
 };
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout, onOpenSettings }) => {
   const rankInfo = getRankInfo(stats.xp);
 
   return (
     <div className="min-h-screen bg-bg pb-32 flex flex-col items-center">
       <div className="sticky top-0 z-50 w-full bg-white border-b border-ink/5 px-6 py-6 flex justify-between items-center max-w-2xl mx-auto">
         <h1 className="text-2xl font-black text-ink font-display tracking-tight uppercase">Profile</h1>
-        <button className="w-10 h-10 rounded-xl flex items-center justify-center text-ink-muted hover:bg-ink/5 transition-colors">
+        <button onClick={onOpenSettings} className="w-10 h-10 rounded-xl flex items-center justify-center text-ink-muted hover:bg-ink/5 transition-colors">
           <Settings size={24} />
         </button>
       </div>
@@ -151,23 +152,74 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout 
           </div>
         </div>
 
+        {/* Achievements - Horizontal Scroll */}
         <div>
-          <h3 className="text-xl font-black text-ink font-display uppercase tracking-tight mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-brand-purple rounded-full" />
-            Achievements
-          </h3>
-          <div className="bg-white border-2 border-ink/5 border-dashed rounded-[2rem] p-12 flex flex-col items-center justify-center text-center gap-4">
-            <div className="w-20 h-20 bg-bg rounded-full flex items-center justify-center text-ink-muted/30">
-              <Trophy size={40} />
-            </div>
-            <div>
-              <p className="text-ink font-black text-lg">No achievements yet</p>
-              <p className="text-ink-muted font-bold text-sm">Keep learning to unlock special badges!</p>
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-black text-ink font-display uppercase tracking-tight flex items-center gap-3">
+              <div className="w-2 h-6 bg-brand-purple rounded-full" />
+              Thành tựu
+            </h3>
+            <button className="text-brand-blue text-xs font-bold uppercase tracking-widest">
+              Xem tất cả →
+            </button>
+          </div>
+
+          {/* Unlocked achievements */}
+          <div className="flex gap-3 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
+            {[
+              { emoji: '🔥', label: '7-Day Streak', sub: '1 tuần liên tiếp', bg: 'from-orange-400 to-orange-500', unlocked: stats.streak >= 7 },
+              { emoji: '📚', label: '100 Words', sub: 'Học 100 từ mới', bg: 'from-brand-green to-green-400', unlocked: stats.completedWords.length >= 100 },
+              { emoji: '🏆', label: 'Quiz Master', sub: '100% trong quiz', bg: 'from-brand-purple to-purple-400', unlocked: false },
+              { emoji: '🌟', label: 'First Word', sub: 'Học từ đầu tiên', bg: 'from-brand-blue to-blue-400', unlocked: stats.completedWords.length >= 1 },
+            ].map((badge, i) => (
+              <div
+                key={i}
+                className={`flex-shrink-0 w-28 text-center ${!badge.unlocked ? 'opacity-40 grayscale' : ''}`}
+              >
+                <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${badge.bg} flex items-center justify-center text-2xl shadow-md mb-2 ${badge.unlocked ? 'shadow-brand-orange/20' : ''}`}>
+                  {badge.emoji}
+                </div>
+                <p className="text-xs font-black text-ink leading-tight">{badge.label}</p>
+                <p className="text-[10px] text-ink-muted leading-tight">{badge.sub}</p>
+              </div>
+            ))}
+
+            {/* Locked badges */}
+            {[
+              { emoji: '🔒', label: '30-Day Streak', sub: 'Cần 16 ngày nữa', bg: 'bg-gray-200' },
+              { emoji: '🔒', label: 'IELTS 7.0', sub: 'Hoàn thành mock test', bg: 'bg-gray-200' },
+            ].map((badge, i) => (
+              <div key={`locked-${i}`} className="flex-shrink-0 w-28 text-center opacity-40 grayscale">
+                <div className={`w-16 h-16 mx-auto rounded-2xl ${badge.bg} flex items-center justify-center text-2xl mb-2`}>
+                  {badge.emoji}
+                </div>
+                <p className="text-xs font-medium text-ink leading-tight">{badge.label}</p>
+                <p className="text-[10px] text-ink-muted leading-tight">{badge.sub}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        <button 
+        {/* Invite Friends */}
+        <motion.div
+          whileHover={{ y: -2 }}
+          className="bg-gradient-to-r from-brand-orange/10 to-brand-orange/5 border-2 border-brand-orange/20 rounded-[2rem] p-5 shadow-sm"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl">👥</span>
+            </div>
+            <div className="flex-1">
+              <h4 className="font-black text-ink text-sm">Mời bạn bè</h4>
+              <p className="text-xs text-ink-muted mt-0.5">Nhận 50 kim cương cho mỗi người</p>
+            </div>
+            <button className="bg-brand-orange text-white font-black text-xs px-4 py-2 rounded-xl active:translate-y-0.5 transition-transform shadow-sm">
+              Mời
+            </button>
+          </div>
+        </motion.div>
+
+        <button
           onClick={onLogout}
           className="w-full py-4 bg-white border-2 border-brand-red/20 text-brand-red rounded-2xl font-black uppercase tracking-widest shadow-sm active:translate-y-1 transition-all flex items-center justify-center gap-3 mt-4"
         >
