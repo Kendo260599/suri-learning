@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Practice - Flashcards</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#763500",
+                        "surface-variant": "#dbdddd",
+                        "on-error-container": "#570008",
+                        "on-primary": "#ffefeb",
+                        "surface-container-low": "#f0f1f1",
+                        "primary": "#a23800",
+                        "surface-bright": "#f6f6f6",
+                        "on-surface-variant": "#5a5c5c",
+                        "on-primary-container": "#431300",
+                        "on-tertiary-fixed-variant": "#5e3c00",
+                        "tertiary-fixed": "#feae25",
+                        "tertiary-dim": "#6e4800",
+                        "outline-variant": "#acadad",
+                        "secondary-container": "#ffc5a5",
+                        "tertiary": "#7e5300",
+                        "surface-container-high": "#e1e3e3",
+                        "on-surface": "#2d2f2f",
+                        "secondary-dim": "#833b00",
+                        "background": "#f6f6f6",
+                        "outline": "#767777",
+                        "on-tertiary-fixed": "#362100",
+                        "on-secondary": "#fff0e9",
+                        "on-primary-fixed-variant": "#531900",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#fff0e1",
+                        "on-primary-fixed": "#000000",
+                        "on-secondary-fixed-variant": "#843c00",
+                        "on-background": "#2d2f2f",
+                        "secondary-fixed-dim": "#ffb285",
+                        "surface-container-highest": "#dbdddd",
+                        "primary-fixed": "#ff7940",
+                        "tertiary-fixed-dim": "#eea113",
+                        "inverse-on-surface": "#9c9d9d",
+                        "primary-dim": "#8e3000",
+                        "inverse-primary": "#fe6a27",
+                        "error-dim": "#9f0519",
+                        "primary-fixed-dim": "#f76522",
+                        "on-error": "#ffefee",
+                        "on-tertiary-container": "#523400",
+                        "inverse-surface": "#0c0f0f",
+                        "primary-container": "#ff7940",
+                        "surface-container": "#e7e8e8",
+                        "error-container": "#fb5151",
+                        "secondary": "#954400",
+                        "surface-tint": "#a23800",
+                        "surface": "#f6f6f6",
+                        "tertiary-container": "#feae25",
+                        "error": "#b31b25",
+                        "surface-dim": "#d3d5d5",
+                        "secondary-fixed": "#ffc5a5",
+                        "on-secondary-fixed": "#582600"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #a23800 0%, #ff7940 100%);
+        }
+        .soft-shadow {
+            box-shadow: 0 8px 24px rgba(45, 47, 47, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="bg-[#f6f6f6] dark:bg-neutral-900 docked top-0 w-full z-50">
+<div class="flex justify-between items-center px-4 h-16 w-full">
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 text-orange-600 dark:text-orange-500">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-lg text-neutral-800 dark:text-neutral-100">Practice</h1>
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 text-orange-600 dark:text-orange-500">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="max-w-md mx-auto px-6 pt-4 pb-32">
+<!-- Progress Section -->
+<div class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="font-headline font-bold text-on-surface text-sm">Card 5 of 20</span>
+<span class="font-label text-xs text-outline font-medium">25% Complete</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full btn-gradient rounded-full" style="width: 25%"></div>
+</div>
+</div>
+<!-- Flashcard -->
+<div class="relative mb-10">
+<div class="bg-surface-container-lowest rounded-xl p-10 flex flex-col items-center justify-center text-center soft-shadow min-h-[320px] border border-surface-container-low">
+<div class="absolute top-4 right-4">
+<span class="material-symbols-outlined text-outline" data-icon="volume_up">volume_up</span>
+</div>
+<span class="text-primary font-headline font-semibold text-xs tracking-widest uppercase mb-2">(adjective)</span>
+<h2 class="font-headline font-extrabold text-4xl mb-3 tracking-tighter text-on-background">UBIQUITOUS</h2>
+<p class="font-body text-outline-variant text-lg">/juːˈbɪkwɪtəs/</p>
+<div class="mt-8 w-12 h-1 bg-surface-container rounded-full"></div>
+</div>
+<!-- Decorative Stack Effect -->
+<div class="absolute -bottom-2 left-4 right-4 h-4 bg-surface-container-low rounded-xl -z-10 opacity-50"></div>
+</div>
+<!-- Tabs -->
+<div class="flex p-1.5 bg-surface-container-low rounded-xl mb-10">
+<button class="flex-1 py-2 text-sm font-headline font-bold rounded-lg bg-surface-container-lowest text-primary shadow-sm">English</button>
+<button class="flex-1 py-2 text-sm font-headline font-medium text-on-surface-variant hover:text-on-surface transition-colors">Vietnamese</button>
+<button class="flex-1 py-2 text-sm font-headline font-medium text-on-surface-variant hover:text-on-surface transition-colors">Example</button>
+</div>
+<!-- Answer Grid -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Correct Answer -->
+<button class="flex items-center p-4 bg-green-50 rounded-xl border-2 border-green-500/30 active:scale-[0.98] transition-all group text-left">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-green-500 text-white font-headline font-bold mr-4">A</div>
+<span class="font-headline font-bold text-green-800 text-lg">Present everywhere</span>
+<span class="material-symbols-outlined ml-auto text-green-600" data-icon="check_circle">check_circle</span>
+</button>
+<!-- Wrong Answer -->
+<button class="flex items-center p-4 bg-red-50 rounded-xl border-2 border-red-500/30 active:scale-[0.98] transition-all group text-left">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-red-500 text-white font-headline font-bold mr-4">B</div>
+<span class="font-headline font-bold text-red-800 text-lg">Hard to find</span>
+<span class="material-symbols-outlined ml-auto text-red-600" data-icon="cancel">cancel</span>
+</button>
+<!-- Neutral Answer -->
+<button class="flex items-center p-4 bg-surface-container-lowest rounded-xl soft-shadow active:scale-[0.98] transition-all group text-left">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant font-headline font-bold mr-4">C</div>
+<span class="font-headline font-bold text-on-surface text-lg">Very expensive</span>
+</button>
+<!-- Neutral Answer -->
+<button class="flex items-center p-4 bg-surface-container-lowest rounded-xl soft-shadow active:scale-[0.98] transition-all group text-left">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant font-headline font-bold mr-4">D</div>
+<span class="font-headline font-bold text-on-surface text-lg">Extremely noisy</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 py-4 bg-[#f6f6f6]/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-t-[2rem] shadow-[0_-8px_24px_rgba(0,0,0,0.06)]">
+<button class="flex items-center justify-center text-neutral-500 dark:text-neutral-400 w-12 h-12 active:scale-90 transition-all duration-200 hover:text-orange-500">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</button>
+<button class="flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full w-12 h-12 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</button>
+<button class="flex items-center justify-center text-neutral-500 dark:text-neutral-400 w-12 h-12 active:scale-90 transition-all duration-200 hover:text-orange-500">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+</button>
+<button class="flex items-center justify-center text-neutral-500 dark:text-neutral-400 w-12 h-12 active:scale-90 transition-all duration-200 hover:text-orange-500">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</nav>
+</body></html>

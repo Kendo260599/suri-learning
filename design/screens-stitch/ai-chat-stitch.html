@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#dbdddd",
+                    "on-tertiary-fixed-variant": "#5e3c00",
+                    "on-primary-container": "#431300",
+                    "error-container": "#fb5151",
+                    "inverse-surface": "#0c0f0f",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#f76522",
+                    "on-primary-fixed": "#000000",
+                    "primary-dim": "#8e3000",
+                    "error-dim": "#9f0519",
+                    "surface-tint": "#a23800",
+                    "primary-container": "#ff7940",
+                    "inverse-on-surface": "#9c9d9d",
+                    "surface-container-highest": "#dbdddd",
+                    "primary": "#a23800",
+                    "on-secondary-fixed-variant": "#843c00",
+                    "secondary-container": "#ffc5a5",
+                    "on-primary-fixed-variant": "#531900",
+                    "surface-container-low": "#f0f1f1",
+                    "surface-container-high": "#e1e3e3",
+                    "inverse-primary": "#fe6a27",
+                    "surface-container": "#e7e8e8",
+                    "on-error-container": "#570008",
+                    "on-surface": "#2d2f2f",
+                    "surface-bright": "#f6f6f6",
+                    "on-secondary-fixed": "#582600",
+                    "on-tertiary": "#fff0e1",
+                    "tertiary-fixed": "#feae25",
+                    "secondary-dim": "#833b00",
+                    "on-tertiary-container": "#523400",
+                    "outline-variant": "#acadad",
+                    "error": "#b31b25",
+                    "on-background": "#2d2f2f",
+                    "tertiary-dim": "#6e4800",
+                    "tertiary-fixed-dim": "#eea113",
+                    "secondary-fixed-dim": "#ffb285",
+                    "on-primary": "#ffefeb",
+                    "on-surface-variant": "#5a5c5c",
+                    "on-error": "#ffefee",
+                    "background": "#f6f6f6",
+                    "primary-fixed": "#ff7940",
+                    "surface": "#f6f6f6",
+                    "secondary": "#954400",
+                    "tertiary-container": "#feae25",
+                    "tertiary": "#7e5300",
+                    "on-secondary": "#fff0e9",
+                    "surface-dim": "#d3d5d5",
+                    "on-tertiary-fixed": "#362100",
+                    "outline": "#767777",
+                    "on-secondary-container": "#763500",
+                    "secondary-fixed": "#ffc5a5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-container {
+            height: calc(100vh - 144px);
+        }
+        body {
+            background-color: #f6f6f6;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f6f6f6] dark:bg-neutral-900 shadow-sm backdrop-blur-xl flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform p-2 rounded-full hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 text-on-surface">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-on-surface">Practice Session</h1>
+</div>
+<div class="bg-surface-container-highest px-4 py-1.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform cursor-pointer">
+<span class="text-sm font-bold text-orange-600 dark:text-orange-500">💎 250</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-32 px-4 max-w-2xl mx-auto min-h-screen">
+<!-- Topic Card (Context Anchor) -->
+<div class="mb-8 p-6 bg-surface-container-low rounded-lg relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">forum</span>
+</div>
+<div class="relative z-10">
+<span class="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">Current Topic</span>
+<h2 class="font-headline text-2xl font-extrabold text-on-surface mb-1">IELTS Speaking Part 2</h2>
+<p class="text-on-surface-variant text-sm">Focusing on fluency and vocabulary range.</p>
+</div>
+</div>
+<!-- Chat Area -->
+<div class="space-y-6">
+<!-- AI Message (Purple Aesthetic) -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="flex items-center gap-2 mb-2 ml-1">
+<div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-indigo-600" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">AI Tutor</span>
+</div>
+<div class="bg-indigo-50 text-indigo-950 p-5 rounded-tr-lg rounded-bl-lg rounded-br-lg shadow-sm border-l-4 border-indigo-400">
+<p class="text-[15px] leading-relaxed font-medium">Hello! Let's practice IELTS Speaking Part 2. Describe a memorable trip you took.</p>
+</div>
+<span class="mt-2 ml-1 text-[10px] text-outline">10:42 AM</span>
+</div>
+<!-- User Message (Green Aesthetic) -->
+<div class="flex flex-col items-end ml-auto max-w-[85%]">
+<div class="flex items-center gap-2 mb-2 mr-1">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">You</span>
+<div class="w-6 h-6 rounded-full overflow-hidden border border-emerald-200">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a young man smiling in natural daylight with soft blurred background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyXomNFEmYwR5OWZJweNBn8VA-sdnL6Da1g3DgUTFvbM7JaNcGv9sGKR1HXjKavYwUd_X2JnH8VFcNiHlYbOUCdiOGoAR2EkVr0dmS6eBlxZqbgTHE9u2eV3fv78wxt1_hCqRnYjJlGMVulaP6qVXithX9s0wd4c-enskoJAWO28wGf861eZwEnVuN9P7I07tLrU9e6k525Za9jwOh4NHbZjIXgnvrAUX-GpVyRc_rQrUOjmDn2WpYANg2iV80q8fBG-OhGxkQqpGP"/>
+</div>
+</div>
+<div class="bg-emerald-50 text-emerald-950 p-5 rounded-tl-lg rounded-bl-lg rounded-br-lg shadow-sm border-r-4 border-emerald-400">
+<p class="text-[15px] leading-relaxed font-medium">I'd like to talk about my trip to Japan last spring. It was absolutely breathtaking.</p>
+</div>
+<span class="mt-2 mr-1 text-[10px] text-outline">10:43 AM</span>
+</div>
+<!-- Vocabulary Hint (Asymmetric Design System Rule) -->
+<div class="flex justify-center my-8">
+<div class="bg-surface-container-highest/50 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<p class="text-xs font-semibold text-on-surface-variant">Try using: <span class="text-on-surface italic">"unforgettable experience"</span></p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Interaction Shell -->
+<div class="fixed bottom-0 left-0 w-full z-50 flex flex-col items-center px-4 pb-8 pt-4 pointer-events-none">
+<!-- Input Bar Container -->
+<div class="w-full max-w-2xl bg-white/80 dark:bg-neutral-900/80 shadow-[0_-8px_24px_rgba(0,0,0,0.06)] backdrop-blur-2xl rounded-xl p-3 flex items-center gap-3 pointer-events-auto">
+<!-- Secondary Action (Keyboard toggle / Icon Only) -->
+<button class="w-12 h-12 flex items-center justify-center text-neutral-400 hover:text-orange-500 active:scale-95 transition-all">
+<span class="material-symbols-outlined">keyboard</span>
+</button>
+<!-- Main Input Field -->
+<div class="flex-grow">
+<input class="w-full bg-surface-container-low border-0 focus:ring-0 rounded-full px-6 py-3 text-sm font-medium text-on-surface placeholder:text-outline-variant" placeholder="Type a message..." type="text"/>
+</div>
+<!-- Voice Interaction (The FAB/Active Element) -->
+<button class="bg-gradient-to-tr from-orange-700 to-orange-400 text-white w-12 h-12 rounded-full shadow-lg shadow-orange-500/30 flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+<!-- Send Action -->
+<button class="w-12 h-12 flex items-center justify-center text-orange-600 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<!-- Background Decoration (Tactile Layering) -->
+<div class="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+<div class="absolute top-1/4 -right-20 w-80 h-80 bg-primary-container/10 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-1/4 -left-20 w-80 h-80 bg-tertiary-container/10 rounded-full blur-[100px]"></div>
+</div>
+</body></html>

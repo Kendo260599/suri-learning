@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leaderboard - English Learning App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ffb285",
+                        "on-tertiary-container": "#523400",
+                        "on-error-container": "#570008",
+                        "on-primary-fixed-variant": "#531900",
+                        "surface-container": "#e7e8e8",
+                        "tertiary-container": "#feae25",
+                        "secondary": "#954400",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#763500",
+                        "on-background": "#2d2f2f",
+                        "surface-container-low": "#f0f1f1",
+                        "primary-fixed": "#ff7940",
+                        "on-secondary": "#fff0e9",
+                        "primary": "#a23800",
+                        "primary-dim": "#8e3000",
+                        "secondary-container": "#ffc5a5",
+                        "error-dim": "#9f0519",
+                        "tertiary-fixed-dim": "#eea113",
+                        "outline": "#767777",
+                        "surface-variant": "#dbdddd",
+                        "on-tertiary": "#fff0e1",
+                        "on-tertiary-fixed": "#362100",
+                        "surface-tint": "#a23800",
+                        "tertiary-dim": "#6e4800",
+                        "on-secondary-fixed": "#582600",
+                        "on-primary-container": "#431300",
+                        "error": "#b31b25",
+                        "outline-variant": "#acadad",
+                        "secondary-dim": "#833b00",
+                        "secondary-fixed": "#ffc5a5",
+                        "tertiary": "#7e5300",
+                        "primary-fixed-dim": "#f76522",
+                        "tertiary-fixed": "#feae25",
+                        "inverse-surface": "#0c0f0f",
+                        "surface-container-high": "#e1e3e3",
+                        "on-error": "#ffefee",
+                        "primary-container": "#ff7940",
+                        "on-surface-variant": "#5a5c5c",
+                        "on-tertiary-fixed-variant": "#5e3c00",
+                        "on-surface": "#2d2f2f",
+                        "on-secondary-fixed-variant": "#843c00",
+                        "inverse-primary": "#fe6a27",
+                        "on-primary": "#ffefeb",
+                        "background": "#f6f6f6",
+                        "surface-bright": "#f6f6f6",
+                        "error-container": "#fb5151",
+                        "inverse-on-surface": "#9c9d9d",
+                        "surface-dim": "#d3d5d5",
+                        "surface-container-highest": "#dbdddd",
+                        "on-primary-fixed": "#000000",
+                        "surface": "#f6f6f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f6f6f6; color: #2d2f2f; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .podium-shadow { filter: drop-shadow(0 20px 30px rgba(162, 56, 0, 0.1)); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-[#f6f6f6]/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-on-surface">menu</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-slate-900 dark:text-slate-50 text-xl">Leaderboard</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-500">notifications</span>
+</div>
+</header>
+<main class="px-5 pt-4">
+<!-- Time Filter Segmented Control -->
+<div class="bg-surface-container-low p-1.5 rounded-full flex gap-1 mb-8">
+<button class="flex-1 py-2.5 rounded-full text-sm font-bold bg-white text-primary shadow-sm">Weekly</button>
+<button class="flex-1 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-colors">Monthly</button>
+<button class="flex-1 py-2.5 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-colors">All Time</button>
+</div>
+<!-- Podium Section -->
+<div class="flex items-end justify-center gap-2 mb-10 mt-12 relative">
+<!-- Rank 2 -->
+<div class="flex flex-col items-center w-1/3">
+<div class="relative mb-3">
+<div class="w-16 h-16 rounded-full border-4 border-slate-300 overflow-hidden bg-white">
+<img class="w-full h-full object-cover" data-alt="avatar of a young developer with glasses and a friendly smile, flat illustration style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4InlJDoZMpFMv1dWxe4URtJY66uDLhMaO0dsGVXI4dYRdZZlBd3pbXmkxmD4jRaa1OX08cPgraW9SGckfETh_q3sdIFgaVtpERY1vrdFQN0gkTuA3zlSS0c1WHBBBvTLLdW7J5g9dJPMu5lafLLAdoRJsd8cTfDLQ4oLITt6GFq8C2VjyZ1Lm3Y904GW3B5K5DcHoxHnh7UXF_FJEx5g2PhE1dRKWJTBC0G35_d3N1betVAYcYIxGfmhv84gAbnbm6md55UV7yhOV"/>
+</div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">2ND</div>
+</div>
+<p class="text-xs font-bold truncate w-full text-center">@thanh_dev</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-orange-500 text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xs font-extrabold text-on-surface">2,400</span>
+</div>
+<div class="w-full bg-slate-200 h-24 mt-4 rounded-t-xl opacity-60"></div>
+</div>
+<!-- Rank 1 (Center) -->
+<div class="flex flex-col items-center w-1/3 -mt-10 z-10">
+<div class="relative mb-4">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2">
+<span class="material-symbols-outlined text-tertiary text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="w-24 h-24 rounded-full border-[6px] border-tertiary overflow-hidden bg-white shadow-xl">
+<img class="w-full h-full object-cover" data-alt="avatar of a cheerful young woman learner, flat modern vector style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEI8y2nemeM4qz5uLlHYlnbESI0rb6EtVuQldJvPY1HtFQMFOOFEm7Fb9Z0QVTGQxCom0b5iK96OnQHTUbTmK1moV7HpjTJmRZwqAgJFnclkHRUTTTqrFwy0SANWc6kaLlac3bLUnM7rxPx68HFKtMBP-TYlOUNuTPk_xHwOqw1SwoFBYV-m8uO8Jt8xmOe2TcRl3hCHNVz_XrT-kVZQWOh6Pg2ABT2Ntvr_R7SEJL2y5bLJFiIugcLspjdkVfTNHcXRFMhmdCIRfw"/>
+</div>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary-container text-xs font-black px-3 py-1 rounded-full shadow-lg">1ST</div>
+</div>
+<p class="text-sm font-black truncate w-full text-center text-primary">@minh_learns</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-orange-600 text-base" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-sm font-black text-on-surface">2,800</span>
+</div>
+<div class="w-full bg-gradient-to-b from-tertiary/20 to-tertiary/40 h-36 mt-4 rounded-t-2xl border-t-4 border-tertiary/30"></div>
+</div>
+<!-- Rank 3 -->
+<div class="flex flex-col items-center w-1/3">
+<div class="relative mb-3">
+<div class="w-16 h-16 rounded-full border-4 border-[#CD7F32]/50 overflow-hidden bg-white">
+<img class="w-full h-full object-cover" data-alt="avatar of a stylish girl student, bright colors, flat design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjtGpddMRUuEs0o-2rgkK3bWexBRYXrwjAmci8mcd8HYeTP7zRtmC5zKdTQ8KvKs6eAqVAY8BcD1dRVkgF3EarmggtV1F1FG8tf1ICtU4V5j_6D3eW-qmyUg3SBmiHBqEGXaOCfhiYTBPqSDdrlcmyc3vbxme9oRpnniKH3Tv0EzwAD40PPc7k1SJ4IR37IWlUnDwCOoXnHQEe3Z8SNzUKvuAkF_nr1hlB6b5isl7m8Dje6bwZWEWleXHWDREPDy_oRa4-BVjnT8LX"/>
+</div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#CD7F32] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3RD</div>
+</div>
+<p class="text-xs font-bold truncate w-full text-center">@lan_ielts</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-orange-500 text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xs font-extrabold text-on-surface">2,100</span>
+</div>
+<div class="w-full bg-orange-100 h-20 mt-4 rounded-t-xl opacity-60"></div>
+</div>
+</div>
+<!-- Progress Banner -->
+<div class="bg-primary/5 p-4 rounded-2xl flex items-center justify-between mb-8 border border-primary/10">
+<div class="flex flex-col gap-0.5">
+<p class="text-primary font-bold text-sm">Cần thêm 440 XP để vào Top 10!</p>
+<div class="w-32 h-1.5 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[65%]"></div>
+</div>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-4 py-2 rounded-full text-xs font-bold shadow-md active:scale-95 transition-transform">Học Ngay</button>
+</div>
+<!-- Personal Stats Grid -->
+<div class="grid grid-cols-3 gap-3 mb-8">
+<div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm border border-black/5 flex flex-col items-center">
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Your Rank</span>
+<span class="text-xl font-black text-primary">#15</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm border border-black/5 flex flex-col items-center">
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Total XP</span>
+<span class="text-xl font-black text-on-surface">1,560</span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm border border-black/5 flex flex-col items-center">
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Lessons</span>
+<span class="text-xl font-black text-on-surface">28</span>
+</div>
+</div>
+<!-- Ranked List -->
+<div class="space-y-3 mb-10">
+<h3 class="text-sm font-bold text-on-surface-variant px-1">Other Rankings</h3>
+<!-- Rank 4 -->
+<div class="bg-surface-container-lowest p-3 rounded-2xl flex items-center gap-4 shadow-sm">
+<span class="w-6 text-center font-bold text-on-surface-variant">4</span>
+<img class="w-10 h-10 rounded-full bg-surface-container" data-alt="friendly cartoon avatar, diverse features, vibrant color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9yEHhV84RKpZREDWFDM4MtIy1xi3WKXPF5C7esnksXWlaterZz5qwIQwlU-4kN-3GIXv--L1sbhl0OO3GzR1iyMI1_-q6y7TBHQnz3VDMRCfLT0BQj4ep0aAUOcLmKx36ihO8dEMD6fDbbKG1IBgUkQO4rePgNpxiIVRE24mwc7OENyp4Vz_upkkr5iWK5kKFrbrdnGNENPYuQrbAjiRlDI5MDq13pmBHQQW4dEKy8ImWpVtfW9iVCviDhYC27NEIUDFz4bXfV6Oi"/>
+<div class="flex-1">
+<p class="font-bold text-sm text-on-surface">@duc_anh_99</p>
+<p class="text-[10px] font-medium text-on-surface-variant">1,950 XP</p>
+</div>
+<span class="material-symbols-outlined text-slate-300">expand_less</span>
+</div>
+<!-- User Me (Rank 15) -->
+<div class="bg-orange-50 p-3 rounded-2xl flex items-center gap-4 border-2 border-primary shadow-md relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-primary text-white text-[9px] font-bold px-3 py-1 rounded-bl-xl">Bạn</div>
+<span class="w-6 text-center font-black text-primary">15</span>
+<img class="w-10 h-10 rounded-full bg-white border-2 border-primary-container" data-alt="personal user avatar profile picture, friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2-n58qIfYSw6ID7wrSr3Iqwvk2lcBKqCXLiQ9A4nBwFFG8ktg6Sb3N0TVvLHBSXcn7chO425VbmNEMMj_TbXqu5pkb73pYO01YPRiTln0jb5oyOBScIVvpnUHDvTZCBjC5M-xaOGkvPvfZ-N4lG4kP8zbeXvCKuQKQApALc2oIr0N1xZSqd_3tRNLR1FgyMQXmHvU-N7KFPi2HOobkEqjkoXLGFfqUTd_JmNvVMHOEtBy3wIGuNCzZrpahxPLCCd4cVfT1EbnRiD-"/>
+<div class="flex-1">
+<p class="font-black text-sm text-on-surface">@user_me</p>
+<p class="text-[10px] font-bold text-primary">1,560 XP</p>
+</div>
+<div class="flex items-center text-primary font-bold text-xs gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+</div>
+</div>
+<!-- Rank 16 -->
+<div class="bg-surface-container-lowest p-3 rounded-2xl flex items-center gap-4 shadow-sm opacity-80">
+<span class="w-6 text-center font-bold text-on-surface-variant">16</span>
+<img class="w-10 h-10 rounded-full bg-surface-container" data-alt="avatar icon of a male student with a cap, playful modern style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2_7RZdDxuzp1kyDir5DaWaMdZMV1-Sv-rXdkoU4lebu8cT6L1TgN6XPmO9km8g3of4CpQE_3D49hXn6g3VEDZ0Op0FmW_CbX348Kw3Nz85oK_v7gBbMkS0rQOtalrLRLi0Xb1mgM_wzNMLANtga7qq2V7ahRqrLTeBbmuK0ngA9krhxollU4lNhlqXMjVXG-m_RktYcVsNaY_9mqtXYmkc9D9JzjwmU5SM6V83ksxbfipSiNeZ-veHgLnUEWdAWlYLlrHcP5BE3NO"/>
+<div class="flex-1">
+<p class="font-bold text-sm text-on-surface">@hong_hanh</p>
+<p class="text-[10px] font-medium text-on-surface-variant">1,540 XP</p>
+</div>
+<span class="material-symbols-outlined text-slate-300">remove</span>
+</div>
+<!-- Rank 17 -->
+<div class="bg-surface-container-lowest p-3 rounded-2xl flex items-center gap-4 shadow-sm opacity-80">
+<span class="w-6 text-center font-bold text-on-surface-variant">17</span>
+<img class="w-10 h-10 rounded-full bg-surface-container" data-alt="avatar icon of a professional woman, minimal flat illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZNU_hjO_2OoWAh9WQo-fFfmunyebLuY8Kpeeru4US0v9GkaEnQ2nlKa1IvRoXJ-6EIWCJEc8AfyfcN0IKehW5Xhnh8bFHuFVbFkEg1cxoqUTFMuDpRoN2uy6tngUVQsFUJQiTjd3sopdYhSq5iGqXACXesfoX7xdqetTopsWGabqJ82kRW9PYWucQJRAZVuM3dr3xf-N-fDWSRgaa7hIrZrpgUZaw5E95qre7Ku_8UafDi-ohJD83cWiEb7x43WZ090X5kYamGesQ"/>
+<div class="flex-1">
+<p class="font-bold text-sm text-on-surface">@kien_tran</p>
+<p class="text-[10px] font-medium text-on-surface-variant">1,490 XP</p>
+</div>
+<span class="material-symbols-outlined text-error text-sm">expand_more</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/90 dark:bg-slate-950/90 backdrop-blur-2xl shadow-[0_-8px_24px_rgba(45,47,47,0.06)] rounded-t-[32px]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-2xl active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">school</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-wider">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-2xl active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">auto_stories</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-wider">Review</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 rounded-2xl px-5 py-2 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-wider">Rankings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-2xl active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">person_play</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-wider">Profile</span>
+</a>
+</nav>
+</body></html>

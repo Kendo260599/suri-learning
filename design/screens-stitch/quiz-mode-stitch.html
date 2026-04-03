@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IELTS Mastery - Quiz</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#531900",
+                    "primary": "#a23800",
+                    "secondary": "#954400",
+                    "on-tertiary-fixed-variant": "#5e3c00",
+                    "surface-container-low": "#f0f1f1",
+                    "on-secondary-fixed-variant": "#843c00",
+                    "outline-variant": "#acadad",
+                    "tertiary-container": "#feae25",
+                    "surface-container-high": "#e1e3e3",
+                    "on-error-container": "#570008",
+                    "secondary-container": "#ffc5a5",
+                    "on-surface": "#2d2f2f",
+                    "error": "#b31b25",
+                    "primary-fixed": "#ff7940",
+                    "on-secondary-fixed": "#582600",
+                    "surface": "#f6f6f6",
+                    "on-surface-variant": "#5a5c5c",
+                    "on-primary": "#ffefeb",
+                    "on-background": "#2d2f2f",
+                    "surface-dim": "#d3d5d5",
+                    "secondary-fixed": "#ffc5a5",
+                    "error-dim": "#9f0519",
+                    "primary-container": "#ff7940",
+                    "on-primary-container": "#431300",
+                    "on-primary-fixed": "#000000",
+                    "secondary-dim": "#833b00",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#fb5151",
+                    "surface-container-highest": "#dbdddd",
+                    "inverse-primary": "#fe6a27",
+                    "on-tertiary-fixed": "#362100",
+                    "tertiary-fixed": "#feae25",
+                    "on-tertiary": "#fff0e1",
+                    "surface-bright": "#f6f6f6",
+                    "tertiary": "#7e5300",
+                    "on-tertiary-container": "#523400",
+                    "surface-tint": "#a23800",
+                    "inverse-surface": "#0c0f0f",
+                    "tertiary-dim": "#6e4800",
+                    "inverse-on-surface": "#9c9d9d",
+                    "tertiary-fixed-dim": "#eea113",
+                    "on-secondary-container": "#763500",
+                    "on-secondary": "#fff0e9",
+                    "background": "#f6f6f6",
+                    "outline": "#767777",
+                    "surface-container": "#e7e8e8",
+                    "primary-fixed-dim": "#f76522",
+                    "primary-dim": "#8e3000",
+                    "surface-variant": "#dbdddd",
+                    "secondary-fixed-dim": "#ffb285",
+                    "on-error": "#ffefee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar (Dark Mode Styled) -->
+<header class="bg-neutral-900/95 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-lg mx-auto">
+<button class="text-neutral-400 hover:bg-neutral-800 transition-colors rounded-full p-1 active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-lg text-neutral-100">IELTS Mastery</h1>
+<div class="flex items-center gap-2 bg-error-dim/20 px-3 py-1.5 rounded-full border border-error-dim/30">
+<span class="material-symbols-outlined text-error-container text-sm filled-icon" data-icon="timer">timer</span>
+<span class="text-error-container font-mono font-bold text-sm">00:24</span>
+</div>
+</div>
+<!-- Progress Bar (Liquid Tracker) -->
+<div class="w-full px-6 pb-4 max-w-lg mx-auto">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Question 3/10</span>
+<span class="text-[10px] font-bold text-tertiary-fixed">850 XP</span>
+</div>
+<div class="h-3 w-full bg-neutral-800 rounded-full overflow-hidden">
+<div class="h-full w-[30%] bg-gradient-to-r from-primary to-primary-container rounded-full shadow-[0_0_8px_rgba(162,56,0,0.4)]"></div>
+</div>
+</div>
+<div class="bg-neutral-800 h-[1px] w-full absolute bottom-0"></div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col px-6 py-8 max-w-lg mx-auto w-full gap-8">
+<!-- Question Card -->
+<section class="relative">
+<!-- Decorative Badge -->
+<div class="absolute -top-4 -right-2 z-10 bg-tertiary-container text-on-tertiary-container px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 transform rotate-3 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-sm filled-icon" data-icon="star">star</span>
+<span class="font-headline font-extrabold text-[12px] uppercase">Hard Mode</span>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+<!-- Subtle Texture/Pattern -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary-container to-primary"></div>
+<span class="text-primary font-bold text-xs tracking-widest uppercase mb-4 block">Vocabulary Master</span>
+<h2 class="font-headline font-bold text-2xl text-on-surface leading-tight -tracking-[0.02em]">
+                    What is the meaning of <span class="text-primary underline decoration-primary/20 decoration-4 underline-offset-4">Ephemeral</span>?
+                </h2>
+<!-- Gamified Element: Small Stars -->
+<div class="mt-6 flex gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed text-xs filled-icon" data-icon="auto_awesome">auto_awesome</span>
+<p class="text-neutral-400 text-[11px] font-medium">Context Clue: "Life is short, but art is long."</p>
+</div>
+</div>
+</section>
+<!-- Options Grid -->
+<section class="space-y-4">
+<!-- Correct Option State -->
+<div class="relative">
+<button class="w-full text-left p-6 bg-surface-container-lowest rounded-lg shadow-sm border-2 border-emerald-500/30 ring-4 ring-emerald-500/10 flex items-center justify-between group active:scale-95 transition-all duration-200">
+<div class="flex items-center gap-4">
+<span class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center font-headline font-bold text-emerald-700">A</span>
+<span class="font-body font-semibold text-lg text-on-surface">Brief</span>
+</div>
+<span class="material-symbols-outlined text-emerald-500 filled-icon" data-icon="check_circle">check_circle</span>
+</button>
+<!-- Popup Feedback -->
+<div class="absolute -right-2 -top-6 bg-primary text-on-primary px-3 py-1 rounded-full font-headline font-extrabold text-sm shadow-xl z-20 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm filled-icon" data-icon="bolt">bolt</span>
+                    +10 XP
+                </div>
+</div>
+<!-- Incorrect Option State -->
+<button class="w-full text-left p-6 bg-surface-container-lowest rounded-lg shadow-sm border-2 border-error/20 flex items-center justify-between active:scale-95 transition-all duration-200">
+<div class="flex items-center gap-4">
+<span class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center font-headline font-bold text-error">B</span>
+<span class="font-body font-semibold text-lg text-on-surface">Permanent</span>
+</div>
+<span class="material-symbols-outlined text-error filled-icon" data-icon="cancel">cancel</span>
+</button>
+<!-- Default Option -->
+<button class="w-full text-left p-6 bg-surface-container-lowest rounded-lg shadow-sm hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<div class="flex items-center gap-4">
+<span class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-headline font-bold text-on-surface-variant">C</span>
+<span class="font-body font-semibold text-lg text-on-surface">Ancient</span>
+</div>
+</button>
+<!-- Default Option -->
+<button class="w-full text-left p-6 bg-surface-container-lowest rounded-lg shadow-sm hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<div class="flex items-center gap-4">
+<span class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-headline font-bold text-on-surface-variant">D</span>
+<span class="font-body font-semibold text-lg text-on-surface">Loud</span>
+</div>
+</button>
+</section>
+<!-- Primary Action -->
+<button class="w-full py-5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-extrabold text-lg rounded-xl shadow-[0_4px_0_0_#8e3000] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#8e3000] active:translate-y-[4px] active:shadow-none transition-all duration-150 uppercase tracking-widest mt-4">
+            Next Question
+        </button>
+</main>
+<!-- Contextual Footer -->
+<footer class="mt-auto pb-10 px-6 max-w-lg mx-auto w-full flex justify-between items-center">
+<button class="flex items-center gap-2 text-on-surface-variant font-bold text-sm uppercase tracking-wider px-4 py-2 hover:bg-surface-container-high rounded-full transition-all active:scale-90">
+<span class="material-symbols-outlined text-lg" data-icon="skip_next">skip_next</span>
+            Skip
+        </button>
+<button class="flex items-center gap-3 bg-tertiary-container/20 text-on-tertiary-container px-5 py-2.5 rounded-full border border-tertiary-container/30 font-bold active:scale-90 transition-all">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary filled-icon text-xl" data-icon="diamond">diamond</span>
+<span class="font-headline">10 gems</span>
+</div>
+<div class="w-[1px] h-4 bg-tertiary-container/40 mx-1"></div>
+<span class="text-sm">Hint</span>
+</button>
+</footer>
+<!-- Bottom Navigation Component (Suppressed as per Task Intent: focused quiz journey) -->
+<!-- But included visually as a placeholder if needed for context in the shell rules -->
+<div class="hidden">
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pt-3 pb-8 bg-neutral-50/80 backdrop-blur-xl z-50 rounded-t-[2.5rem]">
+<div class="flex flex-col items-center justify-center bg-orange-100 text-orange-700 rounded-3xl px-5 py-2">
+<span class="material-symbols-outlined filled-icon" data-icon="quiz">quiz</span>
+<span class="font-['Inter'] text-[11px] font-semibold uppercase tracking-wider">Practice</span>
+</div>
+</nav>
+</div>
+</body></html>

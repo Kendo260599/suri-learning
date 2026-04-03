@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#ff7940",
+                    "error-dim": "#9f0519",
+                    "surface-container-low": "#f0f1f1",
+                    "on-surface-variant": "#5a5c5c",
+                    "outline": "#767777",
+                    "primary-fixed": "#ff7940",
+                    "surface-tint": "#a23800",
+                    "error-container": "#fb5151",
+                    "tertiary": "#7e5300",
+                    "surface-container-highest": "#dbdddd",
+                    "on-primary": "#ffefeb",
+                    "inverse-surface": "#0c0f0f",
+                    "surface-bright": "#f6f6f6",
+                    "primary": "#a23800",
+                    "surface-dim": "#d3d5d5",
+                    "tertiary-fixed-dim": "#eea113",
+                    "on-tertiary": "#fff0e1",
+                    "on-secondary-container": "#763500",
+                    "on-primary-fixed": "#000000",
+                    "on-secondary-fixed": "#582600",
+                    "inverse-primary": "#fe6a27",
+                    "secondary": "#954400",
+                    "on-tertiary-fixed-variant": "#5e3c00",
+                    "on-secondary-fixed-variant": "#843c00",
+                    "surface-container-high": "#e1e3e3",
+                    "surface-container": "#e7e8e8",
+                    "on-secondary": "#fff0e9",
+                    "primary-fixed-dim": "#f76522",
+                    "on-primary-fixed-variant": "#531900",
+                    "on-primary-container": "#431300",
+                    "secondary-container": "#ffc5a5",
+                    "inverse-on-surface": "#9c9d9d",
+                    "on-background": "#2d2f2f",
+                    "on-tertiary-fixed": "#362100",
+                    "on-surface": "#2d2f2f",
+                    "on-error-container": "#570008",
+                    "tertiary-fixed": "#feae25",
+                    "tertiary-container": "#feae25",
+                    "on-tertiary-container": "#523400",
+                    "background": "#f6f6f6",
+                    "primary-dim": "#8e3000",
+                    "tertiary-dim": "#6e4800",
+                    "surface": "#f6f6f6",
+                    "secondary-fixed": "#ffc5a5",
+                    "error": "#b31b25",
+                    "outline-variant": "#acadad",
+                    "secondary-dim": "#833b00",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffefee",
+                    "surface-variant": "#dbdddd",
+                    "secondary-fixed-dim": "#ffb285"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.confetti-overlay {
+    background-image: radial-gradient(circle at 50% 50%, transparent 20%, #f6f6f6 100%), url(https://lh3.googleusercontent.com/aida-public/AB6AXuDts_x_CJYNGgP3NGn6dW8jOEjETmwo8TbmSgNDEcGF-_2sUa_N7FXd_h9oPkSfj8NEL2upcJCoX9WOeSAL8STPs5P1-zf-njYfYvkYp8t9NBajYSLT3sPdrs2wRcaL0ohHtQufJu6WKTRnwVGhEnxs2RPaKhWp4M49OLvzJr-7D6B8pOGF0y87PxKzPPriCzx-LvlIRW82ZB3kC42b3IQrW5XLdki5cGfqjv4rBk3L_hv17DjcB4TMFanF3_oI1-wR27f-ohdQoWWT);
+    opacity: 0.1
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-[#f6f6f6] dark:bg-neutral-900 z-50">
+<div class="flex items-center justify-between px-6 py-4 w-full">
+<button class="hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors rounded-full p-2 Active: scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined text-neutral-500" data-icon="close">close</span>
+</button>
+<h1 class="font-plus-jakarta text-2xl font-bold tracking-tight text-orange-600 dark:text-orange-500">Lesson Complete</h1>
+<div class="w-10"></div> <!-- Spacer to center headline -->
+</div>
+<div class="h-px w-full bg-neutral-200/50 dark:bg-neutral-800/50"></div>
+</header>
+<main class="flex-1 overflow-y-auto pb-32">
+<!-- Hero Section with Celebration -->
+<section class="relative px-6 pt-8 pb-4 text-center overflow-hidden">
+<div class="absolute inset-0 confetti-overlay pointer-events-none"></div>
+<!-- Celebration Badge -->
+<div class="relative inline-block mb-6">
+<div class="w-28 h-28 bg-[#58cc02] rounded-full flex items-center justify-center shadow-lg shadow-[#58cc02]/30 ring-8 ring-[#58cc02]/10 scale-105">
+<span class="material-symbols-outlined text-white text-6xl" data-icon="check" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+</div>
+<!-- Asymmetric Floating Icon -->
+<div class="absolute -top-2 -right-2 bg-tertiary-container p-2 rounded-full shadow-md">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight mb-2 text-on-surface">Xuất sắc!</h2>
+<p class="text-on-surface-variant font-medium">You crushed today's English goals!</p>
+</section>
+<!-- Stats Section: Bento Style -->
+<section class="px-6 py-4 grid grid-cols-3 gap-3">
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-b-4 border-green-200 flex flex-col items-center">
+<span class="text-green-600 font-extrabold text-xl">+25 XP</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Experience</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-b-4 border-blue-200 flex flex-col items-center">
+<span class="text-blue-600 font-extrabold text-xl">+3</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Words</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-b-4 border-orange-200 flex flex-col items-center">
+<span class="text-orange-600 font-extrabold text-xl">1 🔥</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Day Streak</span>
+</div>
+</section>
+<!-- Progress Architecture -->
+<section class="px-6 py-6">
+<div class="bg-surface-container-low rounded-lg p-6 relative overflow-hidden">
+<div class="flex justify-between items-end mb-3">
+<div>
+<span class="text-on-surface-variant font-bold text-xs uppercase tracking-widest">Level 12</span>
+<h3 class="font-headline text-xl font-bold text-on-surface">Path to Mastery</h3>
+</div>
+<div class="text-right">
+<span class="font-black text-primary text-lg tracking-tighter">450 XP</span>
+<span class="text-on-surface-variant text-sm block">Next: Level 13</span>
+</div>
+</div>
+<!-- Liquid Tracker -->
+<div class="w-full h-4 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[85%] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] transition-all duration-1000"></div>
+</div>
+<div class="flex justify-between mt-2 px-1">
+<span class="text-[10px] font-bold text-on-surface-variant">425 XP</span>
+<span class="text-[10px] font-bold text-on-surface-variant">500 XP</span>
+</div>
+</div>
+</section>
+<!-- What's Next Section -->
+<section class="px-6 py-4">
+<h4 class="font-headline text-lg font-extrabold mb-4 text-on-surface px-1">What's Next?</h4>
+<div class="space-y-3">
+<!-- Recommended Card -->
+<div class="group relative bg-surface-container-lowest p-4 rounded-lg shadow-sm flex items-center border-2 border-orange-200 active:scale-[0.98] transition-transform">
+<div class="absolute -top-3 right-4 bg-orange-500 text-white text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter">Đề xuất</div>
+<div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-orange-600" data-icon="quiz">quiz</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-on-surface">Vocabulary Quiz</h5>
+<p class="text-xs text-on-surface-variant">Test your new 3 words</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Regular Card -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm flex items-center active:scale-[0.98] transition-transform">
+<div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-blue-600" data-icon="auto_stories">auto_stories</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-on-surface">New Words Review</h5>
+<p class="text-xs text-on-surface-variant">Flashcards for your deck</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- AI Card -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm flex items-center active:scale-[0.98] transition-transform">
+<div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-purple-600" data-icon="robot_2">robot_2</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-on-surface">AI Conversation</h5>
+<p class="text-xs text-on-surface-variant">Practice speaking now</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Social Share Section -->
+<section class="px-6 pt-4 pb-12 flex flex-col items-center">
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-[0.2em] mb-4">Brag to your friends</span>
+<div class="flex gap-6">
+<button class="w-12 h-12 rounded-full bg-black flex items-center justify-center active:scale-90 transition-transform">
+<img alt="X" class="w-5 h-5" data-alt="Official logo of X social media platform in white on a black circular button" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPCp_UggdL4rd3_FGJHrxbu5XWMXJbGa_7kOk6gkcHMVtoT3eTRFBOm1mPkGLIXKY6FsB356OvQsbNqxJ9K--ybeuNLGF9nr7yZjhup14fZBBBlKBmfbCYCzC2FS71-ia8DwkVVMDEebV--FxuNC5maO8WSVv_k43QY9b1GUFZ9H2nE-nMeVxfbE3eBS3YXiDXEgEmkJM6QTRDoi-4F8BOuz1Q0fvhtT6p3ybXMcPTtcX0BVB-vu3g89fNF6DSMXNaLirCPEEbD1ML"/>
+</button>
+<button class="w-12 h-12 rounded-full bg-[#25D366] flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-[#25D366]/20">
+<img alt="WhatsApp" class="w-6 h-6" data-alt="WhatsApp messaging icon in white on a green circular button" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG2KqRxpptcGUFTCynCw-iTh-dw0xItQYCcNKgjAISsngJUOiq8Qk69WbmwVtnN4AtoXXOtW8myV96sS0IRTlA8EeYsG0LS8tcQLK4ycMKBq_9FIXWgtmrn_w8kmMmTNfLWulLjB_Fpb5y5yUON3mRyJjryc13l8IrXXvJuXMCFoZUr7iATIpor183W5Kf1KSAQKf2YqYLC8DADy5yFLBCOZbE9h3wWI5Y6StgBI-rF1oByXvW3TApP2-afiaJLsfSlzEZdkg4qSHZ"/>
+</button>
+<button class="w-12 h-12 rounded-full bg-[#DB4437] flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-[#DB4437]/20">
+<img alt="Google Plus" class="w-6 h-6" data-alt="Google Plus logo icon in white on a red circular button" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVGGe8rApd-enOYdpebK4d6BmIQFRAn5aXfK8Otjn8mvwzS-AJwm8dftPyYb43NyPiWg6-Vp6xsaq1GC58WH51YfQf7ReiyBqwqy6jIlJXzbywMp8Fvq-2bIv39oQj8LQ3Wb7aOZ5wADWESwpTcQe6_pLY9XXR47BjNcHFRKUsN8U-hJOYs6KzdcdOqcoduVvxkQv9P2u1ANoNSAbcc5bBazdkRfzOhWtnUc2cOwjmrzriovnvbyOvtlmntjHSZmQNAbgfLb9SsWwg"/>
+</button>
+</div>
+</section>
+</main>
+<!-- Floating Action Button Area -->
+<div class="fixed bottom-32 left-0 w-full px-6 pointer-events-none">
+<button class="pointer-events-auto w-full h-16 bg-[#58cc02] hover:bg-[#46a302] text-white font-headline font-black text-lg rounded-xl shadow-[0_6px_0_#46a302] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2">
+            Continue Quiz
+            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl shadow-[0_-8px_24px_rgba(0,0,0,0.06)] rounded-t-[32px]">
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 px-5 py-2 hover:text-orange-500 transition-all Active: scale-[0.98] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-plus-jakarta text-[11px] font-semibold">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 px-5 py-2 hover:text-orange-500 transition-all Active: scale-[0.98] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-plus-jakarta text-[11px] font-semibold">Review</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full px-5 py-2 Active: scale-[0.98] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-plus-jakarta text-[11px] font-semibold">Progress</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 dark:text-neutral-400 px-5 py-2 hover:text-orange-500 transition-all Active: scale-[0.98] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-plus-jakarta text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+</body></html>
