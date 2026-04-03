@@ -145,7 +145,7 @@ export const getReviewWords = (wordProgress: Record<string, WordProgress>, count
   return CAMBRIDGE_ROADMAP.filter(w => selectedIds.includes(w.id));
 };
 
-import { generateParaphrasesForWord, ParaphrasePair } from '../services/geminiService';
+import { generateParaphrasesForWord, type ParaphrasePair } from '../services/aiService';
 
 export const generateQuizForWords = async (selectedWords: Word[]): Promise<QuizQuestion[]> => {
   // First, ensure all selected words have paraphrasePairs if possible

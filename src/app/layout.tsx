@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   title: 'Suri Learning - Học Tiếng Anh Thông Minh',
   description: 'Ứng dụng học tiếng Anh IELTS với AI, gamification và SRS',
   icons: {
-    icon: '/favicon.ico',
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    shortcut: '/favicon.svg',
   },
 };
 

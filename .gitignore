@@ -38,3 +38,6 @@ storage.rules
 
 # Build artifacts
 .vercel/
+
+# Service Account Keys (NEVER commit)
+*firebase-adminsdk*.json
