@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
-  User, ChevronRight, Bell, Moon, Volume2, Globe, Shield, HelpCircle,
+  User, ChevronRight, Bell, Moon, Globe, Shield, HelpCircle,
   Star, ExternalLink, LogOut, ChevronLeft, LucideIcon
 } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 
 export interface SettingsViewProps {
   onBack: () => void;
   onLogout: () => void;
   dailyGoal: number;
   onDailyGoalChange: (n: number) => void;
+  onShowPremium?: () => void;
 }
 
 interface SettingItem {
@@ -38,10 +40,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onLogout,
   dailyGoal,
   onDailyGoalChange,
+  onShowPremium,
 }) => {
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
+  const { theme, toggleTheme } = useTheme();
   const [reminderTime] = useState('19:00');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -50,7 +51,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       title: 'Tài khoản',
       items: [
         { icon: User, label: 'Tài khoản', sub: 'Google · suri@email.com', onClick: () => {}, color: 'text-brand-blue', bg: 'bg-brand-blue/10' },
-        { icon: Star, label: 'Nâng cấp Premium', sub: '1 tháng miễn phí', onClick: () => {}, color: 'text-brand-yellow', bg: 'bg-brand-yellow/10', badge: '🎁' },
+        { icon: Star, label: 'Nâng cấp Premium', sub: '1 tháng miễn phí', onClick: () => onShowPremium?.(), color: 'text-brand-yellow', bg: 'bg-brand-yellow/10', badge: '🎁' },
       ],
     },
     {
@@ -64,9 +65,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     {
       title: 'Ứng dụng',
       items: [
-        { icon: Volume2, label: 'Âm thanh', sub: 'Nhạc nền & hiệu ứng', onClick: () => {}, color: 'text-ink', bg: 'bg-ink/5', toggle: true, toggleValue: soundEnabled, onToggleChange: setSoundEnabled },
-        { icon: Moon, label: 'Chế độ tối', sub: 'Tiết kiệm pin & giảm mỏi mắt', onClick: () => {}, color: 'text-ink', bg: 'bg-ink/5', toggle: true, toggleValue: darkMode, onToggleChange: setDarkMode },
-        { icon: Bell, label: 'Thông báo', sub: 'Tin nhắn & lời mời', onClick: () => {}, color: 'text-ink', bg: 'bg-ink/5', toggle: true, toggleValue: notifications, onToggleChange: setNotifications },
+        { icon: Moon, label: 'Chế độ tối', sub: 'Tiết kiệm pin & giảm mỏi mắt', onClick: () => {}, color: 'text-ink', bg: 'bg-ink/5', toggle: true, toggleValue: theme === 'dark', onToggleChange: toggleTheme },
       ],
     },
     {

@@ -34,7 +34,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           <button
             key={view}
             onClick={() => onNavigate(view)}
-            className={`flex flex-col items-center p-4 rounded-2xl transition-all duration-300 ${
+            className={`relative flex flex-col items-center p-4 rounded-2xl transition-all duration-300 ${
               isActive 
                 ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30 -translate-y-1' 
                 : 'text-ink-muted hover:bg-ink/5'
@@ -42,8 +42,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           >
             <Icon fill={isActive ? "white" : "none"} size={24} />
             {view === 'review' && reviewCount > 0 && (
-              <div className="absolute top-3 right-3 w-4 h-4 bg-brand-red rounded-full border-2 border-white flex items-center justify-center text-[10px] text-white font-black">
-                {reviewCount}
+              <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-brand-red rounded-full border-2 border-white flex items-center justify-center text-[9px] text-white font-black px-1 leading-none">
+                {reviewCount > 99 ? '99+' : reviewCount}
               </div>
             )}
           </button>

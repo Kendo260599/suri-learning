@@ -293,10 +293,13 @@ export const QuizView: React.FC<QuizViewProps> = ({
             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => !isListening && onStartListening(currentQuestion.correctAnswer)} disabled={showFeedback} className={`w-28 h-28 rounded-full flex items-center justify-center transition-all ${isListening ? 'bg-brand-red text-white animate-pulse shadow-[0_0_30px_rgba(255,75,75,0.4)]' : showFeedback ? 'bg-line text-ink-muted' : 'bg-brand-blue text-white shadow-[0_8px_0_0_#1899d6] active:translate-y-2 active:shadow-none'}`}>
               {isListening ? <MicOff size={44} strokeWidth={2.5} /> : <Mic size={44} strokeWidth={2.5} />}
             </motion.button>
-            {speechTranscript && (
+            {speechScore !== null && (
               <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center mt-6 p-6 rounded-[2rem] border-2 border-line bg-surface w-full max-w-sm shadow-sm">
                 <p className="text-ink-muted font-black mb-2 uppercase tracking-widest text-xs">You said:</p>
-                <p className={`text-3xl font-black font-display ${speechScore === 100 ? 'text-brand-green' : 'text-brand-red'}`}>"{speechTranscript}"</p>
+                <p className={`text-3xl font-black font-display ${speechScore >= 80 ? 'text-brand-green' : speechScore >= 50 ? 'text-brand-orange' : 'text-brand-red'}`}>"{speechTranscript}"</p>
+                <p className={`mt-3 text-2xl font-black font-display ${speechScore >= 80 ? 'text-brand-green' : speechScore >= 50 ? 'text-brand-orange' : 'text-brand-red'}`}>
+                  {speechScore >= 80 ? 'Excellent!' : speechScore >= 50 ? 'Good try!' : 'Try again!'}
+                </p>
               </motion.div>
             )}
           </div>

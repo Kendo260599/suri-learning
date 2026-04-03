@@ -1,7 +1,9 @@
 import { Word, QuizQuestion, WordProgress } from '../types';
-import { CAMBRIDGE_ROADMAP } from '../data/roadmap_vocab';
 import { BAND_TOPICS } from '../data/topics';
 import { isDue } from './srs';
+import { getWordsByBand, getAllVocabulary, bandCache } from '../data/vocabByBand';
+// @ts-ignore - large static dataset needed for quiz distractor generation
+import { CAMBRIDGE_ROADMAP } from '../data/roadmap_vocab';
 
 // LocalStorage utility with graceful error handling
 const storage = {
@@ -61,13 +63,15 @@ const storage = {
   }
 };
 
-export const getWordsForTopic = (band: number, topicId: string, completedWords: string[] = [], count: number = 5): Word[] => {
+export const getWordsForTopic = async (band: number, topicId: string, completedWords: string[] = [], count: number = 5): Promise<Word[]> => {
+  // Dynamically load only the needed band
+  const bandWords = await getWordsByBand(band);
+  
   // Try to filter words by band and topicId first
-  let topicWords = CAMBRIDGE_ROADMAP.filter(w => w.band === band && w.topicId === topicId);
+  let topicWords = bandWords.filter(w => w.band === band && w.topicId === topicId);
   
   // If no words found for this specific topicId, fallback to the slicing logic
   if (topicWords.length === 0) {
-    const bandWords = CAMBRIDGE_ROADMAP.filter(w => w.band === band);
     const topicsForBand = BAND_TOPICS[band] || [];
     const topicIndex = topicsForBand.findIndex(t => t.id === topicId);
     
@@ -110,11 +114,12 @@ export const getWordsForTopic = (band: number, topicId: string, completedWords: 
   return selectedWords;
 };
 
-export const getTopicStats = (band: number, topicId: string, completedWords: string[]) => {
-  let topicWords = CAMBRIDGE_ROADMAP.filter(w => w.band === band && w.topicId === topicId);
+export const getTopicStats = async (band: number, topicId: string, completedWords: string[]) => {
+  const bandWords = await getWordsByBand(band);
+  
+  let topicWords = bandWords.filter(w => w.band === band && w.topicId === topicId);
   
   if (topicWords.length === 0) {
-    const bandWords = CAMBRIDGE_ROADMAP.filter(w => w.band === band);
     const topicsForBand = BAND_TOPICS[band] || [];
     const topicIndex = topicsForBand.findIndex(t => t.id === topicId);
     
@@ -134,15 +139,52 @@ export const getTopicStats = (band: number, topicId: string, completedWords: str
   return { total, completed };
 };
 
-export const getReviewWords = (wordProgress: Record<string, WordProgress>, count: number = 10): Word[] => {
+/**
+ * Sync version of getTopicStats using cached/all vocabulary.
+ * Use this when you need topic stats synchronously (e.g., in JSX render).
+ * Falls back to 0/0 if vocabulary isn't loaded yet.
+ */
+export const getTopicStatsSync = (band: number, topicId: string, completedWords: string[]): { total: number; completed: number } => {
+  let topicWords: Word[] = [];
+
+  if (bandCache[band]) {
+    topicWords = bandCache[band].filter(w => w.band === band && w.topicId === topicId);
+  }
+
+  if (topicWords.length === 0) {
+    const topicsForBand = BAND_TOPICS[band] || [];
+    const topicIndex = topicsForBand.findIndex(t => t.id === topicId);
+
+    if (bandCache[band] && bandCache[band].length > 0) {
+      const bandWords = bandCache[band];
+      if (topicIndex !== -1 && topicsForBand.length > 0) {
+        const wordsPerTopic = Math.ceil(bandWords.length / topicsForBand.length);
+        const startIndex = topicIndex * wordsPerTopic;
+        const endIndex = startIndex + wordsPerTopic;
+        topicWords = bandWords.slice(startIndex, endIndex);
+      } else {
+        topicWords = bandWords;
+      }
+    }
+  }
+
+  const total = topicWords.length;
+  const completed = topicWords.filter(w => completedWords.includes(w.id)).length;
+
+  return { total, completed };
+};
+
+export const getReviewWords = async (wordProgress: Record<string, WordProgress>, count: number = 10): Promise<Word[]> => {
   const reviewIds = Object.entries(wordProgress)
     .filter(([_, progress]) => isDue(progress.nextReview))
     .map(([wordId]) => wordId);
 
   if (reviewIds.length === 0) return [];
 
+  // Load vocabulary to find the words by ID
+  const allWords = await getAllVocabulary();
   const selectedIds = reviewIds.sort(() => 0.5 - Math.random()).slice(0, count);
-  return CAMBRIDGE_ROADMAP.filter(w => selectedIds.includes(w.id));
+  return allWords.filter(w => selectedIds.includes(w.id));
 };
 
 import { generateParaphrasesForWord, type ParaphrasePair } from '../services/aiService';

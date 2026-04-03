@@ -67,7 +67,7 @@ import {
   Headphones,
 } from 'lucide-react';
 import { QuizQuestion, QuizState, UserStats, Word, WordProgress } from './types';
-import { generateQuizForWords, getWordsForTopic, getTopicStats, getReviewWords } from './utils/quizGenerator';
+import { generateQuizForWords, getWordsForTopic, getTopicStats, getTopicStatsSync, getReviewWords } from './utils/quizGenerator';
 import { getRankInfo } from './utils/rankSystem';
 import { updateSRS } from './utils/srs';
 import { BAND_TOPICS, Topic } from './data/topics';
@@ -80,6 +80,7 @@ import { auth, db, signInWithGoogle, logout, handleFirestoreError, OperationType
 import { onAuthStateChanged } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, collection, query, orderBy, limit } from 'firebase/firestore';
+import { useAuth, INITIAL_STATS } from './hooks/useAuth';
 
 // Lazy load heavy views
 const QuizView = lazy(() => import('./views/QuizView').then(m => ({ default: m.QuizView })));
@@ -88,38 +89,70 @@ const LeaderboardView = lazy(() => import('./views/LeaderboardView').then(m => (
 const SettingsView = lazy(() => import('./views/SettingsView').then(m => ({ default: m.SettingsView })));
 const LessonCompleteView = lazy(() => import('./views/LessonCompleteView').then(m => ({ default: m.LessonCompleteView })));
 const AIChatView = lazy(() => import('./views/AIChatView').then(m => ({ default: m.AIChatView })));
+const PremiumModal = lazy(() => import('./views/PremiumModal').then(m => ({ default: m.PremiumModal })));
 
 // Import components
 import { useAppToast } from './components/ToastProvider';
 import { BottomNav } from './components/BottomNav';
 import { Header } from './components/Header';
-import { QuizSkeleton } from './components/Skeleton';
+import {
+  QuizSkeleton,
+  ProfileSkeleton,
+  LeaderboardSkeleton,
+  SettingsSkeleton,
+  AIChatSkeleton,
+  LessonCompleteSkeleton,
+  PremiumModalSkeleton,
+} from './components/Skeleton';
 
-const INITIAL_STATS: UserStats = {
-  xp: 0,
-  streak: 0,
-  lastActive: new Date().toISOString(),
-  unlockedBands: [1],
-  unlockedTopics: ['1-1'],
-  completedWords: [],
-  completedTopics: [],
-  completedGrammar: [],
-  completedMicroSkills: []
-};
+// Re-exported from useAuth so it's the single source of truth
+// Removed duplicate definition
 
 // Error Boundary Component
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: any }> {
-  constructor(props: { children: React.ReactNode }) {
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: any;
+  errorInfo: any;
+}
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+  onReset?: () => void;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error: any) {
     return { hasError: true, error };
   }
 
+  static getDerivedStateFromProps(props: ErrorBoundaryProps, state: ErrorBoundaryState) {
+    if (state.errorInfo && !props.children) {
+      return { hasError: false, error: null, errorInfo: null };
+    }
+    return null;
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    this.setState({ errorInfo });
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+  }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+    this.props.onReset?.();
+  };
+
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
         <div className="min-h-screen flex items-center justify-center bg-bg p-6">
           <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center border-2 border-brand-red/20">
@@ -128,13 +161,76 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
             </div>
             <h2 className="text-2xl font-black text-ink mb-4 font-display">Something went wrong</h2>
             <p className="text-ink-muted mb-8 font-medium">
-              We encountered an error. Please try refreshing the page.
+              We encountered an error. Please try again or refresh the page.
             </p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="w-full py-4 bg-brand-blue text-white rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-brand-blue/20 active:translate-y-1 transition-all"
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={this.handleReset}
+                className="w-full py-4 bg-brand-blue text-white rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-brand-blue/20 active:translate-y-1 transition-all flex items-center justify-center gap-2"
+              >
+                <RefreshCw size={20} />
+                Try Again
+              </button>
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full py-3 text-ink-muted font-medium hover:text-ink transition-colors"
+              >
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ViewErrorBoundary - wraps lazy-loaded views with retry capability
+interface ViewErrorBoundaryProps {
+  viewName: string;
+  children: React.ReactNode;
+  onRetry?: () => void;
+}
+
+interface ViewErrorBoundaryState {
+  hasError: boolean;
+  error: any;
+}
+
+class ViewErrorBoundary extends React.Component<ViewErrorBoundaryProps, ViewErrorBoundaryState> {
+  constructor(props: ViewErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+    this.props.onRetry?.();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-bg p-6">
+          <div className="bg-white p-6 rounded-2xl shadow-lg max-w-sm w-full text-center border border-brand-red/20">
+            <div className="w-12 h-12 bg-brand-red/10 text-brand-red rounded-full flex items-center justify-center mx-auto mb-4">
+              <XCircle size={28} />
+            </div>
+            <h3 className="text-lg font-bold text-ink mb-2">Failed to load {this.props.viewName}</h3>
+            <p className="text-ink-muted text-sm mb-4">
+              Something went wrong while loading this view.
+            </p>
+            <button
+              onClick={this.handleRetry}
+              className="w-full py-3 bg-brand-blue text-white rounded-xl font-bold shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2"
             >
-              Refresh App
+              <RefreshCw size={18} />
+              Retry
             </button>
           </div>
         </div>
@@ -166,14 +262,13 @@ const RankIcon = ({ icon, className, size }: { icon: string, className?: string,
 };
 
 function AppContent() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthReady, setIsAuthReady] = useState(false);
-  const [stats, setStats] = useState<UserStats>(INITIAL_STATS);
+  const { user, stats, setStats, isAuthReady, signIn, signOut } = useAuth();
   
   // Toast notification system
   const { showToast } = useAppToast();
   
   const [view, setView] = useState<'roadmap' | 'learn' | 'review' | 'quiz' | 'finished' | 'profile' | 'notebook' | 'grammar_theory' | 'daily_plan' | 'micro_skills' | 'micro_skill_detail' | 'leaderboard' | 'ai_lab' | 'ai_writing' | 'ai_chat' | 'match_game' | 'settings' | 'lesson_complete'>('roadmap');
+  const [showPremium, setShowPremium] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [quizState, setQuizState] = useState<QuizState | null>(null);
   const [learnWords, setLearnWords] = useState<Word[]>([]);
@@ -271,89 +366,118 @@ function AppContent() {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Load stats from Firestore
-        const userDocRef = doc(db, 'users', currentUser.uid);
-        try {
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            setStats(userDoc.data() as UserStats);
-          } else {
-            // Initialize new user stats
-            const newStats = {
-              ...INITIAL_STATS,
-              displayName: currentUser.displayName,
-              photoURL: currentUser.photoURL
-            };
-            await setDoc(userDocRef, newStats);
-            setStats(newStats);
-          }
-        } catch (error) {
-          handleFirestoreError(error, OperationType.GET, `users/${currentUser.uid}`);
-        }
-      } else {
-        setStats(INITIAL_STATS);
-      }
-      setIsAuthReady(true);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (user && isAuthReady) {
-      const userDocRef = doc(db, 'users', user.uid);
-      const unsubscribe = onSnapshot(userDocRef, (doc) => {
-        if (doc.exists()) {
-          setStats(doc.data() as UserStats);
-        }
-      }, (error) => {
-        handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
-      });
-      return () => unsubscribe();
-    }
-  }, [user, isAuthReady]);
-
-  useEffect(() => {
-    if (user && isAuthReady) {
-      const saveStats = async () => {
-        const userDocRef = doc(db, 'users', user.uid);
-        try {
-          await setDoc(userDocRef, stats, { merge: true });
-          
-          // Also update leaderboard
-          const leaderboardRef = doc(db, 'leaderboard', user.uid);
-          await setDoc(leaderboardRef, {
-            uid: user.uid,
-            displayName: user.displayName || 'Anonymous',
-            photoURL: user.photoURL || '',
-            xp: stats.xp
-          }, { merge: true });
-        } catch (error) {
-          handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}`);
-        }
-      };
-      
-      // Debounce save to avoid too many writes
-      const timeoutId = setTimeout(saveStats, 2000);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [stats, user, isAuthReady]);
-
+  // Real-time leaderboard
   useEffect(() => {
     if (view === 'leaderboard') {
-      const q = query(collection(db, 'leaderboard'), orderBy('xp', 'desc'), limit(10));
+      // Optimized: only fetch top 10, ordered by xp
+      const q = query(
+        collection(db, 'leaderboard'),
+        orderBy('xp', 'desc'),
+        limit(10)
+      );
       const unsubscribe = onSnapshot(q, (snapshot) => {
-        const data = snapshot.docs.map(doc => doc.data());
-        setLeaderboardData(data);
+        try {
+          const data = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setLeaderboardData(data);
+        } catch (err) {
+          console.error('Error processing leaderboard data:', err);
+          setLeaderboardData([]);
+        }
       }, (error) => {
         handleFirestoreError(error, OperationType.LIST, 'leaderboard');
       });
       return () => unsubscribe();
     }
   }, [view]);
+
+  // Helper: get ISO week number (1-52)
+  const getISOWeek = (date: Date): number => {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  };
+
+  // Helper: get ISO year for week
+  const getISOYear = (date: Date): number => {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    return d.getUTCFullYear();
+  };
+
+  // Check periodic reset whenever XP is gained (on new XP gained)
+  // We accumulate xpWeek/xpMonth by checking if they need to be reset
+  useEffect(() => {
+    if (!user || !isAuthReady) return;
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentWeek = `${getISOYear(now)}-W${getISOWeek(now)}`;
+    const currentMonth = today.substring(0, 7);
+
+    const lastWeekly = stats.lastWeeklyReset;
+    const lastMonthly = stats.lastMonthlyReset;
+    const prevWeek = lastWeekly ? `${getISOYear(new Date(lastWeekly))}-W${getISOWeek(new Date(lastWeekly))}` : '';
+    const prevMonth = lastMonthly ? lastMonthly.substring(0, 7) : '';
+
+    let needsUpdate = false;
+    const updates: Partial<UserStats> = {};
+
+    if (currentWeek !== prevWeek) {
+      updates.xpWeek = 0;
+      updates.lastWeeklyReset = today;
+      needsUpdate = true;
+    }
+    if (currentMonth !== prevMonth) {
+      updates.xpMonth = 0;
+      updates.lastMonthlyReset = today;
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+      setStats(prev => ({ ...prev, ...updates }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stats.xp, user, isAuthReady]);
+
+  // Sync XP to leaderboard when stats change
+  // Optimized: Debounce writes to reduce Firestore write operations
+  const leaderboardSyncTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!user || !isAuthReady) return;
+
+    // Clear existing timeout
+    if (leaderboardSyncTimeout.current) {
+      clearTimeout(leaderboardSyncTimeout.current);
+    }
+
+    // Debounce leaderboard updates by 2 seconds
+    leaderboardSyncTimeout.current = setTimeout(() => {
+      const leaderboardRef = doc(db, 'leaderboard', user.uid);
+      const xpWeek = stats.xpWeek ?? 0;
+      const xpMonth = stats.xpMonth ?? 0;
+      setDoc(leaderboardRef, {
+        uid: user.uid,
+        displayName: user.displayName || 'Anonymous',
+        photoURL: user.photoURL || '',
+        xp: stats.xp,
+        xpWeek,
+        xpMonth,
+      }, { merge: true }).catch((error) => {
+        handleFirestoreError(error, OperationType.WRITE, 'leaderboard');
+      });
+    }, 2000);
+
+    return () => {
+      if (leaderboardSyncTimeout.current) {
+        clearTimeout(leaderboardSyncTimeout.current);
+      }
+    };
+  }, [stats.xp, stats.xpWeek, stats.xpMonth, user, isAuthReady]);
 
   useEffect(() => {
     if (view === 'quiz' && quizState && !showFeedback) {
@@ -445,6 +569,42 @@ function AppContent() {
     }
   };
 
+  const levenshteinDistance = (a: string, b: string): number => {
+    const matrix: number[][] = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    return matrix[b.length][a.length];
+  };
+
+  const calcSpeakingScore = (spoken: string, target: string): number => {
+    // Exact match
+    if (spoken === target) return 100;
+    // Contains full word
+    if (spoken.includes(target) || target.includes(spoken)) return 100;
+    // Word similarity via Levenshtein distance
+    const maxLen = Math.max(target.length, spoken.length);
+    if (maxLen === 0) return 0;
+    const distance = levenshteinDistance(spoken, target);
+    const similarity = 1 - distance / maxLen;
+    if (similarity >= 0.8) return Math.round(80 + (similarity - 0.8) * 100);
+    if (similarity >= 0.6) return Math.round(50 + (similarity - 0.6) * 150);
+    if (similarity >= 0.4) return Math.round(20 + (similarity - 0.4) * 150);
+    return Math.round(similarity * 50);
+  };
+
   const startListening = (targetWord: string) => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -456,6 +616,7 @@ function AppContent() {
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
+    recognition.continuous = false;
 
     recognition.onstart = () => {
       setIsListening(true);
@@ -465,23 +626,40 @@ function AppContent() {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
+      const confidence = event.results[0][0].confidence;
       setSpeechTranscript(transcript);
-      
+
       const target = targetWord.toLowerCase().replace(/[.,?!]/g, '');
-      const spoken = transcript.replace(/[.,?!]/g, '');
-      
-      if (spoken.includes(target) || target.includes(spoken)) {
-        setSpeechScore(100);
-        setSelectedOption(targetWord); // to trigger enable Next button
+      const spoken = transcript.replace(/[.,?!]/g, '').trim();
+      const score = calcSpeakingScore(spoken, target);
+
+      setSpeechScore(score);
+      if (score > 0) {
+        setSelectedOption(targetWord);
       } else {
-        setSpeechScore(0);
-        setSelectedOption(transcript); // user answered something
+        setSelectedOption(transcript);
       }
     };
 
     recognition.onerror = (event: any) => {
-      console.error(event.error);
+      console.error('Speech recognition error:', event.error);
       setIsListening(false);
+      switch (event.error) {
+        case 'not-allowed':
+          showToast('Vui lòng cho phép truy cập micro để sử dụng tính năng nói.', 'error');
+          break;
+        case 'no-speech':
+          showToast('Không phát hiện giọng nói. Vui lòng thử lại.', 'warning');
+          break;
+        case 'audio-capture':
+          showToast('Không tìm thấy micro. Vui lòng kiểm tra thiết bị.', 'error');
+          break;
+        case 'network':
+          showToast('Lỗi mạng. Vui lòng kiểm tra kết nối internet.', 'error');
+          break;
+        default:
+          showToast('Đã xảy ra lỗi nhận diện giọng nói. Vui lòng thử lại.', 'error');
+      }
     };
 
     recognition.onend = () => {
@@ -491,11 +669,11 @@ function AppContent() {
     recognition.start();
   };
 
-  const startReview = () => {
-    const words = getReviewWords(stats.wordProgress || {}, 10);
-    
+  const startReview = async () => {
+    const words = await getReviewWords(stats.wordProgress || {}, 10);
+
     if (words.length === 0) {
-      // Show a nice modal instead of alert
+      showToast('Không có từ nào cần ôn tập hôm nay!', 'info');
       return;
     }
 
@@ -503,74 +681,71 @@ function AppContent() {
     setLearnIndex(0);
     setIsFlipped(false);
     setView('review');
-    
+
     setTimeout(() => playAudio(words[0].word), 500);
   };
 
-  const startLearning = (band: number, topicId: string) => {
-    const words = getWordsForTopic(band, topicId, stats.completedWords, 5);
-    setLearnWords(words);
-    setLearnIndex(0);
-    setIsFlipped(false);
-    setSessionReviewWords([]);
-    setPreGeneratedQuiz(null);
-    
-    // Start background generation of quiz and paraphrases
-    if (words.length > 0) {
-      // Fetch dictionary data for each word in background with error handling
-      words.forEach(async (word) => {
-        try {
-          const dictData = await fetchDictionaryData(word.word);
-          if (dictData) {
-            // Merge dictionary data
-            if (dictData.ipa && !word.ipa) word.ipa = dictData.ipa;
-            if (dictData.synonyms) {
-              word.synonyms = Array.from(new Set([...(word.synonyms || []), ...dictData.synonyms]));
-            }
-            if (dictData.antonyms) {
-              word.antonyms = Array.from(new Set([...(word.antonyms || []), ...dictData.antonyms]));
-            }
-            if (dictData.phonetics) word.phonetics = dictData.phonetics;
-            
-            // Force re-render if it's the current word
-            setLearnWords(prev => {
-              const idx = prev.findIndex(w => w.id === word.id);
-              if (idx !== -1) {
-                const updated = [...prev];
-                updated[idx] = { ...word };
-                return updated;
+  const startLearning = async (band: number, topicId: string) => {
+    setIsGeneratingQuiz(true);
+    try {
+      const words = await getWordsForTopic(band, topicId, stats.completedWords, 5);
+      setLearnWords(words);
+      setLearnIndex(0);
+      setIsFlipped(false);
+      setSessionReviewWords([]);
+      setPreGeneratedQuiz(null);
+
+      if (words.length > 0) {
+        words.forEach(async (word) => {
+          try {
+            const dictData = await fetchDictionaryData(word.word);
+            if (dictData) {
+              if (dictData.ipa && !word.ipa) word.ipa = dictData.ipa;
+              if (dictData.synonyms) {
+                word.synonyms = Array.from(new Set([...(word.synonyms || []), ...dictData.synonyms]));
               }
-              return prev;
-            });
+              if (dictData.antonyms) {
+                word.antonyms = Array.from(new Set([...(word.antonyms || []), ...dictData.antonyms]));
+              }
+              if (dictData.phonetics) word.phonetics = dictData.phonetics;
+
+              setLearnWords(prev => {
+                const idx = prev.findIndex(w => w.id === word.id);
+                if (idx !== -1) {
+                  const updated = [...prev];
+                  updated[idx] = { ...word };
+                  return updated;
+                }
+                return prev;
+              });
+            }
+          } catch (error) {
+            console.error(`Failed to fetch dictionary data for "${word.word}":`, error);
           }
-        } catch (error) {
-          console.error(`Failed to fetch dictionary data for "${word.word}":`, error);
-          // Silently fail - don't interrupt user experience
-        }
-      });
+        });
 
-      generateQuizForWords(words).then(questions => {
-        setPreGeneratedQuiz(questions);
-      }).catch(error => {
-        console.error('Failed to generate quiz:', error);
-        showToast('Không thể tạo quiz. Vui lòng thử lại.', 'error');
-      });
-    }
+        generateQuizForWords(words).then(questions => {
+          setPreGeneratedQuiz(questions);
+        }).catch(error => {
+          console.error('Failed to generate quiz:', error);
+          showToast('Không thể tạo quiz. Vui lòng thử lại.', 'error');
+        });
 
-    setQuizState({
-      questions: [], // Will be generated after learning
-      currentQuestionIndex: 0,
-      score: 0,
-      userAnswers: [],
-      isFinished: false,
-      band,
-      topicId
-    });
-    setView('learn');
-    
-    // Play audio for first word
-    if (words.length > 0) {
-      setTimeout(() => playAudio(words[0].word), 500);
+        setTimeout(() => playAudio(words[0].word), 500);
+      }
+
+      setQuizState({
+        questions: [],
+        currentQuestionIndex: 0,
+        score: 0,
+        userAnswers: [],
+        isFinished: false,
+        band,
+        topicId
+      });
+      setView('learn');
+    } finally {
+      setIsGeneratingQuiz(false);
     }
   };
 
@@ -720,23 +895,22 @@ function AppContent() {
 
     if (isFinished) {
       const finalScore = quizState.score;
-      const xpGained = quizState.sessionXpGained || 0;
-      
+      const xpGainedFinal = quizState.sessionXpGained || 0;
+
       setStats(prev => {
-        const newXp = prev.xp + xpGained;
+        const newXp = prev.xp + xpGainedFinal;
         const totalQuestions = quizState.questions.length;
-        const isPassed = totalQuestions > 0 && (finalScore / totalQuestions) >= 0.6; // 60% to pass
-        
+        const isPassed = totalQuestions > 0 && (finalScore / totalQuestions) >= 0.6;
+
         const newCompletedTopics = [...(prev.completedTopics || [])];
         const newCompletedWords = [...(prev.completedWords || [])];
         const newCompletedGrammar = [...(prev.completedGrammar || [])];
-        
+
         if (quizState.topicId.startsWith('g-')) {
           if (isPassed && !newCompletedGrammar.includes(quizState.topicId)) {
             newCompletedGrammar.push(quizState.topicId);
           }
         } else {
-          // Add words from this session to completed list if user passed
           if (isPassed) {
             learnWords.forEach(w => {
               if (!newCompletedWords.includes(w.id)) {
@@ -745,41 +919,44 @@ function AppContent() {
             });
           }
 
-          // Check if topic is fully completed
-          const topicStats = getTopicStats(quizState.band, quizState.topicId, newCompletedWords);
+          const topicStats = getTopicStatsSync(quizState.band, quizState.topicId, newCompletedWords);
           if (topicStats.completed === topicStats.total && !newCompletedTopics.includes(quizState.topicId)) {
             newCompletedTopics.push(quizState.topicId);
           }
         }
 
-        // Update Daily Plan Task
         let newDailyPlan = prev.dailyPlan ? { ...prev.dailyPlan } : undefined;
         if (newDailyPlan && isPassed) {
           const taskIndex = newDailyPlan.tasks.findIndex(t => t.targetId === quizState.topicId);
           if (taskIndex !== -1) {
             newDailyPlan.tasks[taskIndex].isDone = true;
           }
-          
-          // Check if all tasks are done
           const allDone = newDailyPlan.tasks.every(t => t.isDone);
           if (allDone && !newDailyPlan.isCompleted) {
             newDailyPlan.isCompleted = true;
           }
         }
 
-        // Update Streak only if daily plan is completed
         const isDailyPlanCompleted = newDailyPlan?.isCompleted || false;
         const lastActiveDate = prev.lastActive.split('T')[0];
         const todayDate = new Date().toISOString().split('T')[0];
-        
+
         let newStreak = prev.streak;
         if (isDailyPlanCompleted && lastActiveDate !== todayDate) {
           newStreak += 1;
         }
-        
+
+        const prevXpWeek = prev.xpWeek ?? prev.xp;
+        const prevXpMonth = prev.xpMonth ?? prev.xp;
+        const gainedForWeek = xpGainedFinal > 0 ? xpGainedFinal : 0;
+        const newXpWeek = prevXpWeek + gainedForWeek;
+        const newXpMonth = prevXpMonth + gainedForWeek;
+
         return {
           ...prev,
           xp: newXp,
+          xpWeek: newXpWeek,
+          xpMonth: newXpMonth,
           completedTopics: newCompletedTopics,
           completedWords: newCompletedWords,
           completedGrammar: newCompletedGrammar,
@@ -944,11 +1121,11 @@ function AppContent() {
                     const isCompleted = isGrammar 
                       ? (stats.completedGrammar || []).includes(topic.id)
                       : (() => {
-                          const topicStats = getTopicStats(band, topic.id, stats.completedWords || []);
+                          const topicStats = getTopicStatsSync(band, topic.id, stats.completedWords || []);
                           return topicStats.completed === topicStats.total && topicStats.total > 0;
                         })();
                         
-                    const topicStats = !isGrammar ? getTopicStats(band, topic.id, stats.completedWords || []) : null;
+                    const topicStats = !isGrammar ? getTopicStatsSync(band, topic.id, stats.completedWords || []) : null;
                     const offset = getOffset(i);
                     const IconComponent = topic.icon && IconMap[topic.icon] ? IconMap[topic.icon] : Star;
 
@@ -1967,8 +2144,9 @@ function AppContent() {
 
   const renderAIChat = () => {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-purple rounded-full animate-spin" /></div>}>
-        <AIChatView
+      <ViewErrorBoundary viewName="AI Chat" onRetry={() => setView('roadmap')}>
+        <Suspense fallback={<AIChatSkeleton />}>
+          <AIChatView
           messages={aiChatMessages}
           input={aiChatInput}
           onInputChange={setAiChatInput}
@@ -1995,7 +2173,8 @@ function AppContent() {
           onToggleListening={() => setIsListening(!isListening)}
           onTopicChange={setAiChatTopic}
         />
-      </Suspense>
+        </Suspense>
+      </ViewErrorBoundary>
     );
   };
 
@@ -2076,7 +2255,16 @@ function AppContent() {
           
           // Award XP
           const xpGained = 20;
-          setStats(prev => ({ ...prev, xp: prev.xp + xpGained }));
+          setStats(prev => {
+            const prevXpWeek = prev.xpWeek ?? prev.xp;
+            const prevXpMonth = prev.xpMonth ?? prev.xp;
+            return {
+              ...prev,
+              xp: prev.xp + xpGained,
+              xpWeek: prevXpWeek + xpGained,
+              xpMonth: prevXpMonth + xpGained,
+            };
+          });
         }
       } else {
         // Wrong match
@@ -2222,7 +2410,7 @@ function AppContent() {
     const totalCount = plan.tasks.length;
     const progress = (completedCount / totalCount) * 100;
 
-    const startTask = (task: any) => {
+    const startTask = async (task: any) => {
       if (task.type === 'vocabulary') {
         let foundTopic: any = null;
         let foundBand: number = 0;
@@ -2236,7 +2424,7 @@ function AppContent() {
         });
 
         if (foundTopic) {
-          const words = getWordsForTopic(foundBand, foundTopic.id, stats.completedWords, 5);
+          const words = await getWordsForTopic(foundBand, foundTopic.id, stats.completedWords, 5);
           setLearnWords(words);
           setLearnIndex(0);
           setView('learn');
@@ -2438,11 +2626,17 @@ function AppContent() {
       setShowMicroSkillFeedback(true);
 
       if (correct) {
-        setStats(prev => ({
-          ...prev,
-          xp: prev.xp + 10,
-          completedMicroSkills: Array.from(new Set([...(prev.completedMicroSkills || []), skill.id]))
-        }));
+        setStats(prev => {
+          const prevXpWeek = prev.xpWeek ?? prev.xp;
+          const prevXpMonth = prev.xpMonth ?? prev.xp;
+          return {
+            ...prev,
+            xp: prev.xp + 10,
+            xpWeek: prevXpWeek + 10,
+            xpMonth: prevXpMonth + 10,
+            completedMicroSkills: Array.from(new Set([...(prev.completedMicroSkills || []), skill.id]))
+          };
+        });
       }
     };
 
@@ -2971,15 +3165,19 @@ function AppContent() {
       )}
       {view === 'finished' && renderFinished()}
       {view === 'profile' && (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-blue rounded-full animate-spin" /></div>}>
-          {renderProfile()}
-        </Suspense>
+        <ViewErrorBoundary viewName="Profile" onRetry={() => setView('roadmap')}>
+          <Suspense fallback={<ProfileSkeleton />}>
+            {renderProfile()}
+          </Suspense>
+        </ViewErrorBoundary>
       )}
       {view === 'notebook' && renderNotebook()}
       {view === 'leaderboard' && (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-purple rounded-full animate-spin" /></div>}>
-          {renderLeaderboard()}
-        </Suspense>
+        <ViewErrorBoundary viewName="Leaderboard" onRetry={() => setView('roadmap')}>
+          <Suspense fallback={<LeaderboardSkeleton />}>
+            {renderLeaderboard()}
+          </Suspense>
+        </ViewErrorBoundary>
       )}
       {view === 'grammar_theory' && renderGrammarTheory()}
       {view === 'daily_plan' && renderDailyPlan()}
@@ -2990,29 +3188,38 @@ function AppContent() {
       {view === 'ai_chat' && renderAIChat()}
       {view === 'match_game' && renderMatchGame()}
       {view === 'settings' && (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-16 h-16 border-4 border-line border-t-brand-orange rounded-full animate-spin" /></div>}>
-          <SettingsView
-            onBack={() => setView('profile')}
-            onLogout={logout}
-            dailyGoal={dailyGoal}
-            onDailyGoalChange={(n) => {
-              setDailyGoal(n);
-              if (user) {
-                setDoc(doc(db, 'users', user.uid), { dailyGoal: n }, { merge: true }).catch(console.error);
-              }
-            }}
-          />
-        </Suspense>
+        <ViewErrorBoundary viewName="Settings" onRetry={() => setView('profile')}>
+          <Suspense fallback={<SettingsSkeleton />}>
+            <SettingsView
+              onBack={() => setView('profile')}
+              onLogout={logout}
+              dailyGoal={dailyGoal}
+              onDailyGoalChange={(n) => {
+                setDailyGoal(n);
+                if (user) {
+                  setDoc(doc(db, 'users', user.uid), { dailyGoal: n }, { merge: true }).catch((error) => {
+                    handleFirestoreError(error, OperationType.WRITE, 'users');
+                  });
+                }
+              }}
+              onShowPremium={() => setShowPremium(true)}
+            />
+          </Suspense>
+        </ViewErrorBoundary>
       )}
       {view === 'lesson_complete' && (
-        <LessonCompleteView
-          stats={stats}
-          xpGained={25}
-          wordsLearned={3}
-          accuracy={78}
-          onContinue={() => setView('quiz')}
-          onGoHome={() => setView('roadmap')}
-        />
+        <ViewErrorBoundary viewName="Lesson Complete" onRetry={() => setView('roadmap')}>
+          <Suspense fallback={<LessonCompleteSkeleton />}>
+            <LessonCompleteView
+              stats={stats}
+              xpGained={25}
+              wordsLearned={3}
+              accuracy={78}
+              onContinue={() => setView('quiz')}
+              onGoHome={() => setView('roadmap')}
+            />
+          </Suspense>
+        </ViewErrorBoundary>
       )}
 
       {/* AI Explanation Modal */}
@@ -3052,6 +3259,21 @@ function AppContent() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Premium Modal */}
+      <Suspense fallback={null}>
+        <ViewErrorBoundary viewName="Premium" onRetry={() => setShowPremium(false)}>
+          {showPremium && (
+            <PremiumModal
+              isOpen={showPremium}
+              onClose={() => setShowPremium(false)}
+              onUpgrade={() => {
+                showToast('Tính năng Premium đang được phát triển. Cảm ơn bạn đã quan tâm!', 'info');
+              }}
+            />
+          )}
+        </ViewErrorBoundary>
+      </Suspense>
     </div>
   );
 }

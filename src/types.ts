@@ -104,6 +104,11 @@ export interface UserStats {
   displayName?: string | null;
   photoURL?: string | null;
   role?: 'admin' | 'user';
+  // Periodic XP for leaderboard
+  xpWeek?: number;
+  xpMonth?: number;
+  lastWeeklyReset?: string; // ISO date
+  lastMonthlyReset?: string; // ISO date
 }
 
 export interface MicroSkill {

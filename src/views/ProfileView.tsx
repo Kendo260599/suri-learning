@@ -1,9 +1,26 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { User as UserIcon, Calendar, Settings, LogOut, CheckCircle2, Flame, Diamond, Trophy, BookOpen } from 'lucide-react';
+import {
+  User as UserIcon,
+  Calendar,
+  Settings,
+  LogOut,
+  CheckCircle2,
+  Flame,
+  Diamond,
+  Trophy,
+  BookOpen,
+  Crown,
+  Swords,
+  Star,
+  Medal,
+  Award,
+  Shield,
+} from 'lucide-react';
 import type { User } from 'firebase/auth';
 import type { UserStats } from '../types';
 import { getRankInfo } from '../utils/rankSystem';
+import { useShare, formatShareText } from '../hooks/useShare';
 
 export interface ProfileViewProps {
   user: User | null;
@@ -12,26 +29,40 @@ export interface ProfileViewProps {
   onOpenSettings?: () => void;
 }
 
+const iconMap: Record<string, React.FC<{ className?: string; size?: number }>> = {
+  Crown, Swords, Star, Diamond, Medal, Trophy, Award, Shield,
+};
+
 const RankIcon = ({ icon, className, size }: { icon: string; className?: string; size?: number }) => {
-  const iconMap: Record<string, React.FC<{ className?: string; size?: number }>> = {
-    Crown: require('lucide-react').Crown,
-    Swords: require('lucide-react').Swords,
-    Star: require('lucide-react').Star,
-    Diamond: require('lucide-react').Diamond,
-    Medal: require('lucide-react').Medal,
-    Trophy: require('lucide-react').Trophy,
-    Award: require('lucide-react').Award,
-    Shield: require('lucide-react').Shield,
-  };
-  const IconComponent = iconMap[icon] || iconMap['Shield'];
+  const IconComponent = iconMap[icon] || Shield;
   return <IconComponent className={className} size={size} />;
 };
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout, onOpenSettings }) => {
   const rankInfo = getRankInfo(stats.xp);
+  const { shareText, isSupported } = useShare();
+
+  const handleInvite = async () => {
+    const { title, text } = formatShareText(0, stats.streak, rankInfo.rankName);
+    const success = await shareText(title, text);
+    if (!success && !isSupported && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(`${title}\n\n${text}`);
+      } catch { /* ignore */ }
+    }
+  };
+
+  const handleTwitterInvite = () => {
+    const text = `📚 Tôi đang học IELTS với Suri Learning! 🔥 Streak: ${stats.streak} ngày | Rank: ${rankInfo.rankName}\n\nHọc IELTS thông minh với AI, gamification và SRS.\nhttps://suri-learning.vercel.app`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const joinedDate = user?.metadata?.creationTime
+    ? new Date(user.metadata.creationTime).toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' })
+    : 'Tháng này';
 
   return (
-    <div className="min-h-screen bg-bg pb-32 flex flex-col items-center">
+    <div className="min-h-screen bg-surface pb-32 flex flex-col items-center">
       <div className="sticky top-0 z-50 w-full bg-white border-b border-ink/5 px-6 py-6 flex justify-between items-center max-w-2xl mx-auto">
         <h1 className="text-2xl font-black text-ink font-display tracking-tight uppercase">Profile</h1>
         <button onClick={onOpenSettings} className="w-10 h-10 rounded-xl flex items-center justify-center text-ink-muted hover:bg-ink/5 transition-colors">
@@ -61,7 +92,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout,
             <h2 className="text-3xl font-black text-ink font-display leading-none mb-2">{user?.displayName || 'IELTS Learner'}</h2>
             <div className="flex items-center justify-center sm:justify-start gap-2 text-ink-muted font-bold text-sm uppercase tracking-widest mb-4">
               <Calendar size={14} />
-              Joined March 2026
+              Tham gia {joinedDate}
             </div>
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 ${rankInfo.rankBg} ${rankInfo.rankBorder} ${rankInfo.rankColor}`}>
               <RankIcon icon={rankInfo.icon} size={20} />
@@ -213,7 +244,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ user, stats, onLogout,
               <h4 className="font-black text-ink text-sm">Mời bạn bè</h4>
               <p className="text-xs text-ink-muted mt-0.5">Nhận 50 kim cương cho mỗi người</p>
             </div>
-            <button className="bg-brand-orange text-white font-black text-xs px-4 py-2 rounded-xl active:translate-y-0.5 transition-transform shadow-sm">
+            <button
+              onClick={handleInvite}
+              className="bg-brand-orange text-white font-black text-xs px-4 py-2 rounded-xl active:translate-y-0.5 transition-transform shadow-sm"
+            >
               Mời
             </button>
           </div>

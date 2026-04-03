@@ -2,6 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
+import { ThemeProvider } from '@/hooks/useTheme';
+import { useAuth } from '@/hooks/useAuth';
 
 // Dynamic import to avoid SSR issues with Firebase
 const App = dynamic(() => import('@/components/App').then(mod => ({ default: mod.App })), {
@@ -18,6 +20,7 @@ const App = dynamic(() => import('@/components/App').then(mod => ({ default: mod
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
@@ -34,5 +37,10 @@ export default function Home() {
     );
   }
 
-  return <App />;
+  return (
+    <ThemeProvider userId={user?.uid ?? null}>
+      <App />
+    </ThemeProvider>
+  );
 }
+

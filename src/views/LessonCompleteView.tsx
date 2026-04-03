@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { CheckCircle2, Flame, Diamond, BookOpen, ChevronRight, Share2, Star, ArrowRight } from 'lucide-react';
 import type { UserStats } from '../types';
 import { getRankInfo } from '../utils/rankSystem';
+import { useShare, formatShareText } from '../hooks/useShare';
 
 export interface LessonCompleteViewProps {
   stats: UserStats;
@@ -38,6 +39,21 @@ export const LessonCompleteView: React.FC<LessonCompleteViewProps> = ({
 }) => {
   const confettiRef = useRef<HTMLDivElement>(null);
   const rankInfo = getRankInfo(stats.xp);
+  const { shareText, isSupported } = useShare();
+
+  const handleShare = async () => {
+    const { title, text } = formatShareText(xpGained, stats.streak, rankInfo.rankName);
+    const success = await shareText(title, text);
+    if (!success && isSupported) {
+      // Clipboard fallback handled in hook
+    }
+  };
+
+  const handleTwitterShare = () => {
+    const { title, text } = formatShareText(xpGained, stats.streak, rankInfo.rankName);
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   // Confetti effect
   useEffect(() => {
@@ -229,7 +245,7 @@ export const LessonCompleteView: React.FC<LessonCompleteViewProps> = ({
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onContinue}
+              onClick={onGoHome}
               className="bg-white border-2 border-ink/5 rounded-[2rem] p-4 flex items-center gap-3 shadow-sm text-left"
             >
               <div className="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center flex-shrink-0">
@@ -246,7 +262,7 @@ export const LessonCompleteView: React.FC<LessonCompleteViewProps> = ({
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onContinue}
+              onClick={onGoHome}
               className="bg-white border-2 border-ink/5 rounded-[2rem] p-4 flex items-center gap-3 shadow-sm text-left"
             >
               <div className="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
@@ -287,11 +303,17 @@ export const LessonCompleteView: React.FC<LessonCompleteViewProps> = ({
 
           {/* Share buttons */}
           <div className="flex justify-center gap-3 pt-1">
-            <button className="flex items-center gap-1.5 bg-blue-50 text-blue-500 text-xs font-bold px-4 py-2.5 rounded-xl active:scale-95 transition-transform">
+            <button
+              onClick={handleTwitterShare}
+              className="flex items-center gap-1.5 bg-blue-50 text-blue-500 text-xs font-bold px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
+            >
               <Share2 size={14} />
               Tweet
             </button>
-            <button className="flex items-center gap-1.5 bg-green-50 text-green-600 text-xs font-bold px-4 py-2.5 rounded-xl active:scale-95 transition-transform">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1.5 bg-green-50 text-green-600 text-xs font-bold px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
+            >
               <Share2 size={14} />
               Chia sẻ
             </button>

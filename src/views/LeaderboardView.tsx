@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { Trophy, Diamond, User as UserIcon, Crown } from 'lucide-react';
+import {
+  Trophy,
+  Diamond,
+  User as UserIcon,
+  Crown,
+  Swords,
+  Star,
+  Medal,
+  Award,
+  Shield,
+} from 'lucide-react';
 import type { User } from 'firebase/auth';
 import { getRankInfo } from '../utils/rankSystem';
 
@@ -9,6 +19,10 @@ export interface LeaderboardEntry {
   displayName?: string;
   photoURL?: string;
   xp?: number;
+  /** XP theo tuần (khi chưa có, client fallback về xp) */
+  xpWeek?: number;
+  /** XP theo tháng */
+  xpMonth?: number;
 }
 
 export interface LeaderboardViewProps {
@@ -18,37 +32,66 @@ export interface LeaderboardViewProps {
 
 const RankIcon = ({ icon, className, size }: { icon: string; className?: string; size?: number }) => {
   const iconMap: Record<string, React.FC<{ className?: string; size?: number }>> = {
-    Crown: Crown,
-    Swords: require('lucide-react').Swords,
-    Star: require('lucide-react').Star,
-    Diamond: require('lucide-react').Diamond,
-    Medal: require('lucide-react').Medal,
-    Trophy: require('lucide-react').Trophy,
-    Award: require('lucide-react').Award,
-    Shield: require('lucide-react').Shield,
+    Crown,
+    Swords,
+    Star,
+    Diamond,
+    Medal,
+    Trophy,
+    Award,
+    Shield,
   };
   const IconComponent = iconMap[icon] || Trophy;
   return <IconComponent className={className} size={size} />;
 };
 
-export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardData, currentUser }) => {
-  const [filter, setFilter] = useState<'week' | 'month' | 'all'>('week');
+function xpForFilter(entry: LeaderboardEntry, filter: 'week' | 'month' | 'all'): number {
+  if (filter === 'week') return entry.xpWeek ?? entry.xp ?? 0;
+  if (filter === 'month') return entry.xpMonth ?? entry.xp ?? 0;
+  return entry.xp ?? 0;
+}
 
-  // Top 3 for podium
-  const top3 = leaderboardData.slice(0, 3);
-  const rest = leaderboardData.slice(3);
+type PodiumSlot = {
+  entry: LeaderboardEntry;
+  rankNum: 1 | 2 | 3;
+  height: string;
+  bg: string;
+};
 
-  const podiumOrder = top3.length >= 3
-    ? [top3[1], top3[0], top3[2]] // [2nd, 1st, 3rd] for display order
-    : top3.length === 2
-    ? [top3[0], top3[1]]           // [1st, 2nd] if only 2
-    : top3;
-
-  const podiumConfig = [
-    { pos: '2nd', bg: 'bg-gradient-to-b from-slate-300 to-slate-400', label: 'bg-slate-300', textColor: 'text-slate-700', height: 'h-24', rankNum: 2 },
-    { pos: '1st', bg: 'bg-gradient-to-b from-amber-400 to-amber-500', label: 'bg-amber-400', textColor: 'text-amber-900', height: 'h-32', rankNum: 1 },
-    { pos: '3rd', bg: 'bg-gradient-to-b from-orange-300 to-orange-400', label: 'bg-orange-300', textColor: 'text-orange-900', height: 'h-20', rankNum: 3 },
+/** Bục: với 1–2 người vẫn map đúng hạng (tránh top3[1] undefined → màn hình trắng). */
+function buildPodiumSlots(top3: LeaderboardEntry[]): PodiumSlot[] {
+  if (top3.length === 0) return [];
+  const second = { rankNum: 2 as const, height: 'h-24', bg: 'bg-gradient-to-b from-slate-300 to-slate-400' };
+  const first = { rankNum: 1 as const, height: 'h-32', bg: 'bg-gradient-to-b from-amber-400 to-amber-500' };
+  const third = { rankNum: 3 as const, height: 'h-20', bg: 'bg-gradient-to-b from-orange-300 to-orange-400' };
+  if (top3.length === 1) {
+    return [{ entry: top3[0], ...first }];
+  }
+  if (top3.length === 2) {
+    return [
+      { entry: top3[1], ...second },
+      { entry: top3[0], ...first },
+    ];
+  }
+  return [
+    { entry: top3[1], ...second },
+    { entry: top3[0], ...first },
+    { entry: top3[2], ...third },
   ];
+}
+
+export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardData, currentUser }) => {
+  const [filter, setFilter] = useState<'week' | 'month' | 'all'>('all');
+
+  const sortedData = useMemo(() => {
+    return [...leaderboardData].sort(
+      (a, b) => xpForFilter(b, filter) - xpForFilter(a, filter),
+    );
+  }, [leaderboardData, filter]);
+
+  const top3 = sortedData.slice(0, 3);
+  const rest = sortedData.slice(3);
+  const podiumSlots = buildPodiumSlots(top3);
 
   return (
     <div className="min-h-screen bg-surface pb-32">
@@ -84,29 +127,33 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardDat
             </button>
           ))}
         </div>
+        <p className="text-[11px] text-ink-muted font-medium px-1 mt-2 text-center max-w-2xl mx-auto">
+          {filter === 'all'
+            ? 'Xếp theo XP tích lũy.'
+            : `XP đã đạt được trong ${filter === 'week' ? 'tuần này' : 'tháng này'}. Được reset vào đầu kỳ mới.`}
+        </p>
       </div>
 
       <div className="w-full max-w-2xl mx-auto px-6 flex flex-col gap-4">
 
         {/* Podium Top 3 */}
-        {top3.length >= 1 && (
+        {podiumSlots.length >= 1 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-end justify-center gap-2 mb-2"
+            className={`flex items-end justify-center gap-2 mb-2 ${podiumSlots.length === 1 ? 'max-w-[200px] mx-auto' : ''}`}
           >
-            {podiumConfig.slice(0, Math.min(top3.length, 3)).map((config, ci) => {
-              const entry = top3[config.rankNum - 1];
-              if (!entry) return null;
-              const rankInfo = getRankInfo(entry.xp || 0);
+            {podiumSlots.map((slot, ci) => {
+              const entry = slot.entry;
+              const displayXp = xpForFilter(entry, filter);
               const isCurrentUser = entry.uid === currentUser?.uid;
               return (
                 <motion.div
-                  key={entry.uid}
+                  key={`${entry.uid}-${slot.rankNum}`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: ci * 0.1, type: 'spring', damping: 12 }}
-                  className="flex flex-col items-center flex-1"
+                  className="flex flex-col items-center flex-1 min-w-0"
                 >
                   {/* Avatar */}
                   <div className={`w-14 h-14 rounded-full overflow-hidden border-4 ${isCurrentUser ? 'border-brand-purple' : 'border-white'} shadow-lg mb-2 relative`}>
@@ -117,7 +164,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardDat
                         <UserIcon size={28} />
                       </div>
                     )}
-                    {config.rankNum === 1 && (
+                    {slot.rankNum === 1 && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-2xl">👑</div>
                     )}
                   </div>
@@ -126,11 +173,11 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardDat
                   <p className="text-xs font-black text-ink mb-0.5 truncate max-w-full px-1">
                     {isCurrentUser ? 'Bạn' : (entry.displayName || 'User').split(' ')[0]}
                   </p>
-                  <p className="text-[10px] text-ink-muted font-bold mb-2">{entry.xp || 0} XP</p>
+                  <p className="text-[10px] text-ink-muted font-bold mb-2">{displayXp} XP</p>
 
                   {/* Podium Block */}
-                  <div className={`w-full ${config.height} ${config.bg} rounded-t-2xl flex flex-col items-center justify-center shadow-md border-t-2 border-white/20`}>
-                    <span className="font-black text-white text-lg">{config.rankNum}</span>
+                  <div className={`w-full ${slot.height} ${slot.bg} rounded-t-2xl flex flex-col items-center justify-center shadow-md border-t-2 border-white/20`}>
+                    <span className="font-black text-white text-lg">{slot.rankNum}</span>
                     <Trophy size={14} className="text-white/70" />
                   </div>
                 </motion.div>
@@ -141,7 +188,8 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardDat
 
         {/* Ranked List */}
         {rest.map((entry, index) => {
-          const rankInfo = getRankInfo(entry.xp || 0);
+          const displayXp = xpForFilter(entry, filter);
+          const rankInfo = getRankInfo(displayXp);
           const isCurrentUser = entry.uid === currentUser?.uid;
           return (
             <motion.div
@@ -184,13 +232,13 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ leaderboardDat
 
               <div className="flex items-center gap-2 bg-brand-blue/10 px-4 py-2 rounded-2xl text-brand-blue">
                 <Diamond fill="currentColor" size={16} />
-                <span className="font-black">{entry.xp || 0}</span>
+                <span className="font-black">{displayXp}</span>
               </div>
             </motion.div>
           );
         })}
 
-        {leaderboardData.length === 0 && (
+        {sortedData.length === 0 && (
           <div className="text-center py-20">
             <p className="text-ink-muted font-bold">Chưa có dữ liệu xếp hạng.</p>
           </div>

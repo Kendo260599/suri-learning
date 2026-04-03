@@ -139,6 +139,97 @@ export const LeaderboardSkeleton: React.FC = () => (
   </div>
 );
 
+export const SettingsSkeleton: React.FC = () => (
+  <div className="min-h-screen bg-bg pb-32">
+    <div className="w-full max-w-2xl mx-auto p-6 flex flex-col gap-6">
+      <div className="bg-white border-2 border-ink/5 rounded-[2.5rem] p-8 shadow-sm">
+        <Skeleton variant="text" width={160} height={28} className="mb-6" />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between py-4 border-b border-line">
+            <Skeleton variant="text" width={120} height={20} />
+            <Skeleton variant="rounded" width={64} height={32} />
+          </div>
+          <div className="flex items-center justify-between py-4 border-b border-line">
+            <Skeleton variant="text" width={100} height={20} />
+            <Skeleton variant="circular" width={48} height={48} />
+          </div>
+          <div className="flex items-center justify-between py-4 border-b border-line">
+            <Skeleton variant="text" width={140} height={20} />
+            <Skeleton variant="rounded" width={48} height={24} />
+          </div>
+        </div>
+      </div>
+      <Skeleton variant="rounded" height={56} className="rounded-[1.5rem]" />
+    </div>
+  </div>
+);
+
+export const AIChatSkeleton: React.FC = () => (
+  <div className="min-h-screen bg-bg pb-32 flex flex-col">
+    <div className="w-full max-w-2xl mx-auto flex-1 flex flex-col p-6">
+      <div className="flex items-center gap-4 mb-6">
+        <Skeleton variant="circular" width={40} height={40} />
+        <Skeleton variant="text" width={120} height={24} />
+      </div>
+      <div className="flex-1 space-y-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+            <Skeleton
+              variant="rounded"
+              width={i % 2 === 0 ? '70%' : '60%'}
+              height={80}
+              className="rounded-2xl"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 flex gap-4">
+        <Skeleton variant="rounded" height={48} className="flex-1 rounded-2xl" />
+        <Skeleton variant="rounded" width={48} height={48} className="rounded-2xl" />
+      </div>
+    </div>
+  </div>
+);
+
+export const LessonCompleteSkeleton: React.FC = () => (
+  <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-6">
+    <div className="w-full max-w-md bg-white border-2 border-ink/5 rounded-[2.5rem] p-8 shadow-sm flex flex-col items-center">
+      <Skeleton variant="circular" width={96} height={96} className="mb-6" />
+      <Skeleton variant="text" width="70%" height={32} className="mb-4" />
+      <Skeleton variant="text" width="50%" height={48} className="mb-8" />
+      <div className="grid grid-cols-3 gap-4 w-full mb-8">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="text-center">
+            <Skeleton variant="text" width={40} height={32} className="mx-auto mb-2" />
+            <Skeleton variant="text" width={60} height={14} className="mx-auto" />
+          </div>
+        ))}
+      </div>
+      <Skeleton variant="rounded" height={56} className="w-full rounded-[1.5rem]" />
+    </div>
+  </div>
+);
+
+export const PremiumModalSkeleton: React.FC = () => (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="bg-white rounded-[2.5rem] p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="flex justify-end mb-4">
+        <Skeleton variant="circular" width={32} height={32} />
+      </div>
+      <Skeleton variant="circular" width={80} height={80} className="mx-auto mb-6" />
+      <Skeleton variant="text" width="60%" height={28} className="mx-auto mb-4" />
+      <Skeleton variant="text" width="80%" height={16} className="mx-auto mb-2" />
+      <Skeleton variant="text" width="70%" height={16} className="mx-auto mb-8" />
+      <div className="space-y-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} variant="rounded" height={60} className="rounded-xl" />
+        ))}
+      </div>
+      <Skeleton variant="rounded" height={56} className="mt-6 rounded-xl" />
+    </div>
+  </div>
+);
+
 export const RoadmapTopicSkeleton: React.FC = () => (
   <div className="flex flex-col items-center gap-16 relative">
     <div className="relative z-10 flex flex-col items-center">

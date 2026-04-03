@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Send, Mic, MicOff, X, Sparkles, Paperclip, ChevronDown } from 'lucide-react';
+import { Send, Mic, MicOff, X, Sparkles, Paperclip } from 'lucide-react';
 
 export interface AIChatMessage {
   role: 'user' | 'model';
@@ -167,7 +167,12 @@ export const AIChatView: React.FC<AIChatViewProps> = ({
                 )}
 
                 {/* Feedback label (last AI message) */}
-                {!isUser && idx === messages.filter((m, i) => !isUser && i === messages.length - 1 ? true : false).length - 1 && (
+                {!isUser && idx === (() => {
+                  for (let i = messages.length - 1; i >= 0; i--) {
+                    if (messages[i].role === 'model') return i;
+                  }
+                  return -1;
+                })() && (
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <div className="w-1.5 h-1.5 bg-brand-green rounded-full" />
                     <span className="text-[10px] font-bold text-brand-green">Grammar: 9/10</span>

@@ -41,3 +41,5 @@ storage.rules
 
 # Service Account Keys (NEVER commit)
 *firebase-adminsdk*.json
+
+.vercel

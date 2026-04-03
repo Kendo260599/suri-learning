@@ -1,5 +1,15 @@
 import React from 'react';
-import { Flame, Diamond } from 'lucide-react';
+import {
+  Flame,
+  Diamond,
+  Crown,
+  Swords,
+  Star,
+  Medal,
+  Trophy,
+  Award,
+  Shield,
+} from 'lucide-react';
 
 export interface HeaderStats {
   xp: number;
@@ -21,18 +31,11 @@ export interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ stats, rankInfo }) => {
+  const iconMap: Record<string, React.FC<{ className?: string; size?: number }>> = {
+    Crown, Swords, Star, Diamond, Medal, Trophy, Award, Shield,
+  };
   const RankIcon = ({ icon, className, size }: { icon: string; className?: string; size?: number }) => {
-    const iconMap: Record<string, React.FC<{ className?: string; size?: number }>> = {
-      Crown: require('lucide-react').Crown,
-      Swords: require('lucide-react').Swords,
-      Star: require('lucide-react').Star,
-      Diamond: require('lucide-react').Diamond,
-      Medal: require('lucide-react').Medal,
-      Trophy: require('lucide-react').Trophy,
-      Award: require('lucide-react').Award,
-      Shield: require('lucide-react').Shield,
-    };
-    const IconComponent = iconMap[icon] || iconMap['Shield'];
+    const IconComponent = iconMap[icon] || Shield;
     return <IconComponent className={className} size={size} />;
   };
 
