@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Suri Learning - Leaderboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#ea580c', dark: '#c2410c' },
+            xp: '#58cc02', gem: '#ffc800',
+            ai: '#a560f2', surface: '#f7f7f7',
+            textPrimary: '#2d3436', textSecondary: '#636e72',
+            gold: '#fbbf24', silver: '#9ca3af', bronze: '#b45309',
+          },
+          fontFamily: { heading: ['Space Grotesk','sans-serif'], body: ['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    .card-shadow { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .tap-btn { transition: all 0.15s ease; }
+    .tap-btn:active { transform: scale(0.96); }
+    @keyframes floatUp { 0%{transform:translateY(10px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+    .float-up { animation: floatUp 0.4s ease-out; }
+    .podium-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    .podium-2 { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+    .podium-3 { background: linear-gradient(135deg, #b45309, #92400e); }
+    .current-user { border-color: #ea580c !important; box-shadow: 0 0 0 2px rgba(234,88,12,0.2); }
+  </style>
+</head>
+<body class="bg-surface min-h-screen max-w-md mx-auto pb-6">
+
+  <!-- Header -->
+  <div class="bg-white px-4 pt-3 pb-3 sticky top-0 z-50 border-b border-gray-100">
+    <div class="flex items-center justify-between mb-3">
+      <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center tap-btn">
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <h1 class="font-heading font-bold text-xl text-textPrimary">Bảng xếp hạng</h1>
+      <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center tap-btn">
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </button>
+    </div>
+    <!-- Tab Selector -->
+    <div class="bg-gray-100 rounded-xl p-1 flex">
+      <button class="flex-1 py-2 text-sm font-semibold text-white bg-brand rounded-lg transition-all">Tuần</button>
+      <button class="flex-1 py-2 text-sm font-medium text-textSecondary tap-btn">Tháng</button>
+      <button class="flex-1 py-2 text-sm font-medium text-textSecondary tap-btn">Mọi lúc</button>
+    </div>
+  </div>
+
+  <div class="px-4 pt-4">
+
+    <!-- Podium -->
+    <div class="flex items-end justify-center gap-3 mb-6">
+      <!-- 2nd Place -->
+      <div class="flex-1 flex flex-col items-center">
+        <div class="w-14 h-14 rounded-full bg-white border-4 border-silver card-shadow mb-2 overflow-hidden">
+          <div class="w-full h-full bg-gradient-to-br from-silver to-gray-400 flex items-center justify-center">
+            <span class="text-white font-bold text-lg">T</span>
+          </div>
+        </div>
+        <p class="font-heading font-bold text-sm text-textPrimary">@thanh_dev</p>
+        <p class="text-xs text-textSecondary">2,400 XP</p>
+        <div class="w-full podium-2 rounded-t-xl mt-2 flex items-center justify-center" style="height:80px">
+          <span class="font-heading font-bold text-white text-lg">2</span>
+        </div>
+      </div>
+      <!-- 1st Place -->
+      <div class="flex-1 flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-white border-4 border-gold card-shadow mb-2 overflow-hidden relative">
+          <div class="w-full h-full bg-gradient-to-br from-gold to-yellow-500 flex items-center justify-center">
+            <span class="text-white font-bold text-xl">M</span>
+          </div>
+          <div class="absolute -top-2 left-1/2 -translate-x-1/2 text-lg">👑</div>
+        </div>
+        <p class="font-heading font-bold text-sm text-textPrimary">@minh_learns</p>
+        <p class="text-xs text-textSecondary">2,800 XP</p>
+        <div class="w-full podium-1 rounded-t-xl mt-2 flex items-center justify-center" style="height:110px">
+          <span class="font-heading font-bold text-white text-2xl">1</span>
+        </div>
+      </div>
+      <!-- 3rd Place -->
+      <div class="flex-1 flex flex-col items-center">
+        <div class="w-14 h-14 rounded-full bg-white border-4 border-bronze card-shadow mb-2 overflow-hidden">
+          <div class="w-full h-full bg-gradient-to-br from-bronze to-amber-700 flex items-center justify-center">
+            <span class="text-white font-bold text-lg">L</span>
+          </div>
+        </div>
+        <p class="font-heading font-bold text-sm text-textPrimary">@lan_ielts</p>
+        <p class="text-xs text-textSecondary">2,100 XP</p>
+        <div class="w-full podium-3 rounded-t-xl mt-2 flex items-center justify-center" style="height:60px">
+          <span class="font-heading font-bold text-white text-lg">3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ranked List -->
+    <div class="space-y-2 mb-6">
+      <!-- Rank 4 -->
+      <div class="bg-white rounded-2xl p-3 flex items-center gap-3 card-shadow tap-btn">
+        <span class="w-8 text-center font-heading font-bold text-textSecondary">4</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+          <span class="text-white font-bold">H</span>
+        </div>
+        <div class="flex-1">
+          <p class="font-heading font-semibold text-sm text-textPrimary">@hung_student</p>
+          <p class="text-xs text-textSecondary">1,980 XP · 38 lessons</p>
+        </div>
+        <span class="text-xs font-semibold text-xp bg-xp/10 px-2 py-1 rounded-full">+180 XP</span>
+      </div>
+      <!-- Rank 5 -->
+      <div class="bg-white rounded-2xl p-3 flex items-center gap-3 card-shadow tap-btn">
+        <span class="w-8 text-center font-heading font-bold text-textSecondary">5</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+          <span class="text-white font-bold">P</span>
+        </div>
+        <div class="flex-1">
+          <p class="font-heading font-semibold text-sm text-textPrimary">@phuong_eng</p>
+          <p class="text-xs text-textSecondary">1,850 XP · 35 lessons</p>
+        </div>
+        <span class="text-xs font-semibold text-xp bg-xp/10 px-2 py-1 rounded-full">+90 XP</span>
+      </div>
+      <!-- Current User - Rank 15 -->
+      <div class="bg-orange-50 rounded-2xl p-3 flex items-center gap-3 card-shadow border-2 border-brand current-user">
+        <span class="w-8 text-center font-heading font-bold text-brand">15</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center">
+          <span class="text-white font-bold">S</span>
+        </div>
+        <div class="flex-1">
+          <p class="font-heading font-semibold text-sm text-textPrimary">@suri_learner <span class="text-xs bg-brand/10 text-brand px-1.5 py-0.5 rounded-full ml-1">Bạn</span></p>
+          <p class="text-xs text-textSecondary">1,560 XP · 28 lessons</p>
+        </div>
+        <span class="text-xs font-semibold text-brand bg-brand/10 px-2 py-1 rounded-full">↑ 3</span>
+      </div>
+      <!-- Rank 16 -->
+      <div class="bg-white rounded-2xl p-3 flex items-center gap-3 card-shadow tap-btn">
+        <span class="w-8 text-center font-heading font-bold text-textSecondary">16</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+          <span class="text-white font-bold">A</span>
+        </div>
+        <div class="flex-1">
+          <p class="font-heading font-semibold text-sm text-textPrimary">@an_voices</p>
+          <p class="text-xs text-textSecondary">1,480 XP · 25 lessons</p>
+        </div>
+        <span class="text-xs font-semibold text-heart bg-heart/10 px-2 py-1 rounded-full">↓ 1</span>
+      </div>
+      <!-- Rank 17 -->
+      <div class="bg-white rounded-2xl p-3 flex items-center gap-3 card-shadow tap-btn">
+        <span class="w-8 text-center font-heading font-bold text-textSecondary">17</span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center">
+          <span class="text-white font-bold">N</span>
+        </div>
+        <div class="flex-1">
+          <p class="font-heading font-semibold text-sm text-textPrimary">@ngoc_ielts</p>
+          <p class="text-xs text-textSecondary">1,420 XP · 22 lessons</p>
+        </div>
+        <span class="text-xs font-semibold text-xp bg-xp/10 px-2 py-1 rounded-full">+45 XP</span>
+      </div>
+    </div>
+
+    <!-- My Stats -->
+    <div class="bg-white rounded-2xl card-shadow p-4 mb-4">
+      <h3 class="font-heading font-bold text-base text-textPrimary mb-3">Thành tích của bạn</h3>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="text-center bg-gray-50 rounded-xl p-3">
+          <div class="text-2xl mb-1">#15</div>
+          <div class="text-xs text-textSecondary">Hạng</div>
+        </div>
+        <div class="text-center bg-gray-50 rounded-xl p-3">
+          <div class="text-2xl mb-1">1,560</div>
+          <div class="text-xs text-textSecondary">Tổng XP</div>
+        </div>
+        <div class="text-center bg-gray-50 rounded-xl p-3">
+          <div class="text-2xl mb-1">28</div>
+          <div class="text-xs text-textSecondary">Bài học</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 3 This Week Banner -->
+    <div class="bg-gradient-to-r from-gold/20 to-brand/20 rounded-2xl p-4 border border-gold/30">
+      <div class="flex items-center gap-3">
+        <div class="text-3xl">🎯</div>
+        <div class="flex-1">
+          <h4 class="font-heading font-bold text-sm text-textPrimary">Cần thêm 440 XP để vào Top 10!</h4>
+          <p class="text-xs text-textSecondary mt-0.5">Hoàn thành 5 bài học hôm nay để vượt qua @ngoc_ielts</p>
+        </div>
+        <button class="bg-brand text-white font-heading font-bold text-xs px-3 py-2 rounded-xl tap-btn">Học ngay</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

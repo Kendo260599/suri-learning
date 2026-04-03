@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Suri Learning - Settings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#ea580c', dark: '#c2410c' },
+            xp: '#58cc02', gem: '#ffc800',
+            ai: '#a560f2', surface: '#f7f7f7',
+            textPrimary: '#2d3436', textSecondary: '#636e72',
+          },
+          fontFamily: { heading: ['Space Grotesk','sans-serif'], body: ['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    .tap-btn { transition: all 0.15s ease; }
+    .tap-btn:active { transform: scale(0.97); }
+    .toggle-dark input:checked + div { background-color: #a560f2; }
+    .toggle-dark input:checked + div .toggle-knob { transform: translateX(20px); }
+    .toggle-sound input:checked + div { background-color: #58cc02; }
+    .toggle-sound input:checked + div .toggle-knob { transform: translateX(20px); }
+  </style>
+</head>
+<body class="bg-surface min-h-screen max-w-md mx-auto pb-6">
+
+  <!-- Header -->
+  <div class="bg-white px-4 pt-3 pb-3 sticky top-0 z-50 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center tap-btn">
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <h1 class="font-heading font-bold text-xl text-textPrimary">Cài đặt</h1>
+    </div>
+  </div>
+
+  <div class="px-4 pt-4 space-y-4">
+
+    <!-- Account Section -->
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-100">
+        <p class="text-xs font-semibold text-textSecondary uppercase tracking-wider">Tài khoản</p>
+      </div>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Tài khoản</p>
+          <p class="text-xs text-textSecondary">suri@email.com · Google</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-ai" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 0v4m0 4h.01M6.5 8.5l2.5 2.5-2.5 2.5m9 0L14.5 11l2.5-2.5"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Nâng cấp Premium</p>
+          <p class="text-xs text-gem font-semibold">1 tháng miễn phí</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Learning Section -->
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-100">
+        <p class="text-xs font-semibold text-textSecondary uppercase tracking-wider">Học tập</p>
+      </div>
+      <!-- Daily Goal -->
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-heart" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Mục tiêu hàng ngày</p>
+          <p class="text-xs text-textSecondary">5 từ mới / ngày</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <div class="bg-orange-100 rounded-lg px-2 py-1 text-xs font-semibold text-brand">5</div>
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </button>
+      <!-- Reminders -->
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Nhắc nhở học tập</p>
+          <p class="text-xs text-textSecondary">19:00 hàng ngày</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <!-- Target Language -->
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn">
+        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-xp" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Ngôn ngữ mục tiêu</p>
+          <p class="text-xs text-textSecondary">Tiếng Anh (IELTS)</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- App Settings -->
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-100">
+        <p class="text-xs font-semibold text-textSecondary uppercase tracking-wider">Ứng dụng</p>
+      </div>
+      <!-- Sound Effects Toggle -->
+      <div class="flex items-center gap-4 px-4 py-3.5 border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium text-sm text-textPrimary">Âm thanh</p>
+          <p class="text-xs text-textSecondary">Nhạc nền & hiệu ứng</p>
+        </div>
+        <label class="toggle-sound relative inline-block w-12 h-7 cursor-pointer">
+          <input type="checkbox" class="sr-only" checked onchange="toggleSwitch(this)">
+          <div class="w-12 h-7 bg-xp rounded-full transition-colors">
+            <div class="toggle-knob absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform"></div>
+          </div>
+        </label>
+      </div>
+      <!-- Dark Mode Toggle -->
+      <div class="flex items-center gap-4 px-4 py-3.5 border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium text-sm text-textPrimary">Chế độ tối</p>
+          <p class="text-xs text-textSecondary">Tiết kiệm pin & giảm mỏi mắt</p>
+        </div>
+        <label class="toggle-dark relative inline-block w-12 h-7 cursor-pointer">
+          <input type="checkbox" class="sr-only" onchange="toggleSwitch(this)">
+          <div class="w-12 h-7 bg-gray-200 rounded-full transition-colors">
+            <div class="toggle-knob absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform"></div>
+          </div>
+        </label>
+      </div>
+      <!-- Notifications -->
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Thông báo</p>
+          <p class="text-xs text-textSecondary">Tin nhắn & lời mời</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Support Section -->
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-100">
+        <p class="text-xs font-semibold text-textSecondary uppercase tracking-wider">Hỗ trợ</p>
+      </div>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Trợ giúp & FAQ</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-xp" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Đánh giá ứng dụng</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Chính sách bảo mật</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn border-b border-gray-50">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Điều khoản dịch vụ</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="w-full flex items-center gap-4 px-4 py-3.5 tap-btn">
+        <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-textSecondary" fill="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-sm text-textPrimary">Liên hệ hỗ trợ</p>
+        </div>
+        <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Version & Sign Out -->
+    <div class="text-center pt-2 pb-4">
+      <p class="text-xs text-textSecondary mb-3">Phiên bản 1.0.0 · Suri Learning</p>
+      <button class="text-heart text-sm font-medium tap-btn">Đăng xuất</button>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSwitch(checkbox) {
+      // In real app: save to Firebase
+      console.log('Toggle changed:', checkbox.checked);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Suri Learning - Lesson Complete</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#ea580c', dark: '#c2410c' },
+            xp: '#58cc02', xpDark: '#46a302',
+            heart: '#ff4b4b', gem: '#ffc800',
+            ai: '#a560f2', aiDark: '#7c3aed',
+            surface: '#f7f7f7',
+            textPrimary: '#2d3436', textSecondary: '#636e72',
+          },
+          fontFamily: { heading: ['Space Grotesk','sans-serif'], body: ['Inter','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; overscroll-behavior: none; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    .card-shadow { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .card-shadow-lg { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    .tap-btn { transition: all 0.15s ease; }
+    .tap-btn:active { transform: scale(0.97); }
+    .xp-fill { background: linear-gradient(90deg, #58cc02, #7ddb02); }
+    @keyframes confettiFall { 0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(360deg);opacity:0} }
+    @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.1)} 70%{transform:scale(0.9)} 100%{transform:scale(1);opacity:1} }
+    @keyframes xpFloat { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-30px);opacity:0} }
+    @keyframes streakPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    .confetti { position:fixed; width:10px; height:10px; border-radius:2px; animation: confettiFall 3s ease-in forwards; pointer-events:none; z-index:999; }
+    .check-bounce { animation: bounceIn 0.6s ease-out 0.2s both; }
+    .xp-float { animation: xpFloat 1s ease-out 0.8s forwards; opacity:0; }
+    .streak-anim { animation: streakPulse 1s ease-in-out 1s; }
+    .slide-up-1 { animation: slideUp 0.4s ease-out 0.4s both; }
+    .slide-up-2 { animation: slideUp 0.4s ease-out 0.6s both; }
+    .slide-up-3 { animation: slideUp 0.4s ease-out 0.8s both; }
+    .slide-up-4 { animation: slideUp 0.4s ease-out 1s both; }
+    .recommended-badge { background: linear-gradient(90deg, #ea580c, #ff9600); }
+  </style>
+</head>
+<body class="bg-surface min-h-screen max-w-md mx-auto relative overflow-hidden">
+
+  <!-- Confetti Canvas -->
+  <div id="confetti-container"></div>
+
+  <!-- Header Spacer -->
+  <div class="h-12"></div>
+
+  <!-- Celebration Content -->
+  <div class="px-4 pt-4 pb-8 relative z-10">
+
+    <!-- Checkmark Circle -->
+    <div class="flex justify-center mb-6 check-bounce">
+      <div class="w-28 h-28 rounded-full bg-gradient-to-br from-xp to-xpDark flex items-center justify-center card-shadow-lg">
+        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center mb-6 slide-up-1">
+      <h1 class="font-heading font-bold text-3xl text-textPrimary mb-1">Xuất sắc!</h1>
+      <p class="text-textSecondary">Bạn đã hoàn thành bài học hôm nay</p>
+    </div>
+
+    <!-- XP Gained Animation -->
+    <div class="flex justify-center mb-4 slide-up-1" style="position:relative;height:60px">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2">
+        <div id="xp-badge" class="bg-xp/10 border-2 border-xp text-xp font-heading font-bold text-2xl px-6 py-2 rounded-2xl">
+          +25 XP ✨
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="bg-white rounded-2xl card-shadow-lg p-5 mb-5 slide-up-2">
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-2">
+            <span class="text-2xl">📚</span>
+          </div>
+          <div class="font-heading font-bold text-lg text-textPrimary">3</div>
+          <div class="text-xs text-textSecondary">từ mới</div>
+        </div>
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-2 streak-anim">
+            <span class="text-2xl">🔥</span>
+          </div>
+          <div class="font-heading font-bold text-lg text-flame">+1</div>
+          <div class="text-xs text-textSecondary">streak</div>
+        </div>
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center mx-auto mb-2">
+            <span class="text-2xl">⚡</span>
+          </div>
+          <div class="font-heading font-bold text-lg text-ai">78%</div>
+          <div class="text-xs text-textSecondary">chính xác</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- XP Progress Bar -->
+    <div class="bg-white rounded-2xl card-shadow p-4 mb-5 slide-up-2">
+      <div class="flex justify-between items-center mb-2">
+        <div>
+          <p class="text-sm font-semibold text-textPrimary">Tiến độ lên Level 13</p>
+          <p class="text-xs text-textSecondary">425 → 450 XP</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-xp" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <span class="text-xs font-semibold text-xp">85%</span>
+        </div>
+      </div>
+      <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div class="h-full rounded-full xp-fill transition-all" style="width:85%"></div>
+      </div>
+      <p class="text-xs text-textSecondary mt-1.5">Còn 75 XP để lên Level 13</p>
+    </div>
+
+    <!-- What's Next -->
+    <div class="mb-6 slide-up-3">
+      <h3 class="font-heading font-bold text-lg text-textPrimary mb-3">Bài tiếp theo</h3>
+      <div class="space-y-3">
+
+        <!-- Recommended -->
+        <button class="w-full bg-white rounded-2xl p-4 card-shadow flex items-center gap-3 tap-btn border-2 border-brand">
+          <div class="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center flex-shrink-0 relative">
+            <span class="text-2xl">📝</span>
+            <div class="absolute -top-1 -right-1 recommended-badge text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+              Đề xuất
+            </div>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-heading font-semibold text-sm text-textPrimary">Vocabulary Quiz</p>
+            <p class="text-xs text-textSecondary mt-0.5">5 câu hỏi · 3 từ để ôn tập</p>
+          </div>
+          <div class="flex items-center gap-1 bg-xp/10 px-2 py-1 rounded-lg">
+            <svg class="w-3 h-3 text-xp" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+            <span class="text-xs font-semibold text-xp">+15</span>
+          </div>
+        </button>
+
+        <!-- Review Words -->
+        <button class="w-full bg-white rounded-2xl p-4 card-shadow flex items-center gap-3 tap-btn">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">🔄</span>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-heading font-semibold text-sm text-textPrimary">Ôn tập từ đã học</p>
+            <p class="text-xs text-textSecondary mt-0.5">12 từ chờ ôn tập</p>
+          </div>
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <!-- AI Conversation -->
+        <button class="w-full bg-white rounded-2xl p-4 card-shadow flex items-center gap-3 tap-btn">
+          <div class="w-12 h-12 rounded-xl bg-ai/10 flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">🤖</span>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-heading font-semibold text-sm text-textPrimary">AI Speaking Practice</p>
+            <p class="text-xs text-textSecondary mt-0.5">Luyện nói với AI về chủ đề học</p>
+          </div>
+          <svg class="w-5 h-5 text-textSecondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="space-y-3 slide-up-4">
+      <button class="w-full bg-xp text-white font-heading font-bold text-lg py-4 rounded-2xl card-shadow-lg tap-btn flex items-center justify-center gap-2" onclick="continueToQuiz()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Tiếp tục Quiz
+      </button>
+      <button class="w-full bg-white text-textPrimary font-heading font-semibold text-base py-3 rounded-2xl card-shadow tap-btn" onclick="goHome()">
+        Về trang chủ
+      </button>
+    </div>
+
+    <!-- Share -->
+    <div class="mt-4 flex justify-center gap-3 slide-up-4">
+      <button class="flex items-center gap-1.5 bg-blue-50 text-blue-500 text-xs font-semibold px-3 py-2 rounded-xl tap-btn">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Tweet
+      </button>
+      <button class="flex items-center gap-1.5 bg-green-50 text-green-600 text-xs font-semibold px-3 py-2 rounded-xl tap-btn">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        Chia sẻ
+      </button>
+      <button class="flex items-center gap-1.5 bg-red-50 text-red-500 text-xs font-semibold px-3 py-2 rounded-xl tap-btn">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032 6.033-6.032c1.498,0 2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
+        Google+
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // Confetti
+    const colors = ['#ea580c','#58cc02','#ffc800','#a560f2','#ff4b4b','#ff9600'];
+    const container = document.getElementById('confetti-container');
+    for (let i = 0; i < 50; i++) {
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.left = Math.random() * 100 + '%';
+      conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      conf.style.animationDelay = Math.random() * 2 + 's';
+      conf.style.animationDuration = (2 + Math.random() * 2) + 's';
+      container.appendChild(conf);
+    }
+
+    function continueToQuiz() {
+      // In real app: navigate to quiz
+      alert('Đang chuyển đến Vocabulary Quiz...');
+    }
+    function goHome() {
+      alert('Đang về trang chủ...');
+    }
+  </script>
+
+</body>
+</html>
