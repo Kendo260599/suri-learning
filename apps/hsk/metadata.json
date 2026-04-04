@@ -1,5 +1,0 @@
-{
-  "name": "HSK Academy AI",
-  "description": "Ứng dụng học tiếng Trung HSK thông minh với Gia sư AI trực tuyến, luyện tập 4 kỹ năng Nghe-Nói-Đọc-Viết.",
-  "requestFramePermissions": ["microphone"]
-}

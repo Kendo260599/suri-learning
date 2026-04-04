@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Play, BookOpen, PenTool, Award, Gamepad2, CheckCircle2, Lock, Star, ArrowRight, Layers, Puzzle, MessageSquare, Edit3 } from 'lucide-react';

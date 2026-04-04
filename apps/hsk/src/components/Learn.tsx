@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Volume2, BookOpen, Gamepad2, Sparkles, Wand2, Play, Loader2, MessageSquare } from 'lucide-react';
@@ -39,7 +41,7 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
     setLoadingGrammar(true);
     const lessonTitle = `Bài ${selectedLesson}`;
     const explanation = await generateGrammarExplanation(selectedLesson, lessonTitle, filteredWords);
-    setGrammarExplanation(explanation);
+    setGrammarExplanation(explanation ?? null);
     setLoadingGrammar(false);
   };
 

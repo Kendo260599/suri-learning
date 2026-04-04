@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { Home, BookOpen, Layers, Edit3, User, Flame, Gamepad2, Puzzle, MessageSquare, Sparkles } from 'lucide-react';
 import { getProgress } from '../utils/progress';

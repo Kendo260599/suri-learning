@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Trash2, CheckCircle2, ChevronRight, ChevronLeft, Volume2, Edit3, PlayCircle, HelpCircle } from 'lucide-react';

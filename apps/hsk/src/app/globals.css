@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #006c4a;
+  --color-primary-container: #3fb687;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #00422c;
+
+  --color-surface: #f4fbf4;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eef6ee;
+  --color-surface-container: #e8f0e9;
+  --color-surface-container-high: #e3eae3;
+  --color-surface-container-highest: #dde4dd;
+
+  --color-on-surface: #161d19;
+  --color-on-surface-variant: #3c4a42;
+
+  --color-secondary: #0058be;
+  --color-secondary-container: #2170e4;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #fefcff;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-outline: #6c7a71;
+  --color-outline-variant: #bbcabf;
+
+  --color-tertiary-container: #e4c452;
+  --color-on-tertiary-container: #3a3000;
+  --color-on-surface-fixed: #161d19;
+  --color-on-surface-fixed-variant: #3c4a42;
+  --color-primary-fixed: #3fb687;
+  --color-primary-fixed-dim: #007a59;
+  --color-surface-dim: #1a1d1b;
+  --color-surface-variant: #dde4dd;
+  --color-background: #f4fbf4;
+
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-hanzi: "Noto Sans SC", sans-serif;
+  --font-hanzi-serif: "Ma Shan Zheng", cursive;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.hanzi-display {
+  font-family: var(--font-hanzi);
+  line-height: 1.2;
+}
+
+.hanzi-serif {
+  font-family: var(--font-hanzi-serif);
+}
+
+/* Hide scrollbar for horizontal scrolling areas */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

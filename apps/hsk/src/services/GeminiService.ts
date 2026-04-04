@@ -33,7 +33,7 @@ export const generatePracticeSentence = async (words: any[]) => {
         responseMimeType: "application/json",
       }
     });
-    return JSON.parse(response.text);
+    return JSON.parse(response.text ?? '{}');
   } catch (error) {
     console.error("Error generating practice sentence:", error);
     return null;
