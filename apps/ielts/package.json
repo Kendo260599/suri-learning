@@ -1,0 +1,56 @@
+{
+  "name": "suri-learning-ielts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port=3000",
+    "build": "next build",
+    "start": "next start",
+    "preview": "next preview",
+    "clean": "rmdir /s /q .next 2>nul & rmdir /s /q dist 2>nul & echo Done",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  },
+  "dependencies": {
+    "@firebase-oss/ui-react": "^7.0.2-beta",
+    "@google/stitch-sdk": "^0.1.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.11.0",
+    "firebase-admin": "^13.7.0",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "next": "^16.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "recharts": "^3.8.0",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@google/genai": "^1.46.0",
+    "@playwright/test": "^1.59.1",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "dotenv": "^17.3.1",
+    "gaxios": "^7.1.4",
+    "google-auth-library": "^10.6.2",
+    "jsdom": "^29.0.1",
+    "tailwindcss": "^4.1.14",
+    "ts-morph": "^27.0.2",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vitest": "^4.1.2"
+  },
+  "overrides": {
+    "node-domexception": "npm:empty-package"
+  }
+}
