@@ -3,7 +3,7 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "regions": ["sin1"],
+  "outputDirectory": "apps/ielts/.next",
   "headers": [
     {
       "source": "/api/(.*)",
