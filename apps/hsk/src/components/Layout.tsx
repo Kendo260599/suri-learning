@@ -14,11 +14,10 @@ export default function Layout({ children, activeTab, setActiveTab }: LayoutProp
   const [progress, setProgress] = useState(getProgress());
 
   useEffect(() => {
-    // Update progress when tab changes or periodically
-    const interval = setInterval(() => {
-      setProgress(getProgress());
-    }, 2000);
-    return () => clearInterval(interval);
+    setProgress(getProgress());
+    const handler = () => setProgress(getProgress());
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
   }, []);
 
   return (

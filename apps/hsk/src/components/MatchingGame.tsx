@@ -27,7 +27,7 @@ export default function MatchingGame({ selectedLesson, setActiveTab }: { selecte
       : hsk1Words;
       
     const shuffledPool = [...pool].sort(() => 0.5 - Math.random());
-    const selectedWords = shuffledPool.slice(0, 5); // 5 pairs
+    const selectedWords = shuffledPool.slice(0, 8); // 8 pairs
     
     const hanziItems: MatchItem[] = selectedWords.map(w => ({
       id: `hanzi-${w.id}`,
@@ -68,7 +68,11 @@ export default function MatchingGame({ selectedLesson, setActiveTab }: { selecte
       return;
     }
     
-    const selectedItem = items.find(i => i.id === selectedId)!;
+    const selectedItem = items.find(i => i.id === selectedId);
+    if (!selectedItem) {
+      setSelectedId(item.id);
+      return;
+    }
     
     if (selectedItem.wordId === item.wordId && selectedItem.type !== item.type) {
       // Match!
@@ -132,7 +136,7 @@ export default function MatchingGame({ selectedLesson, setActiveTab }: { selecte
         <p className="text-on-surface-variant font-medium">Ghép Hán tự với nghĩa tiếng Việt tương ứng</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+      <div className="grid grid-cols-4 gap-3 w-full max-w-2xl">
         {items.map((item) => {
           const isSelected = selectedId === item.id;
           const isMatched = matchedIds.includes(item.id);
@@ -144,13 +148,13 @@ export default function MatchingGame({ selectedLesson, setActiveTab }: { selecte
               onClick={() => handleItemClick(item)}
               disabled={isMatched}
               className={`
-                h-24 p-4 rounded-2xl border-2 font-bold transition-all flex items-center justify-center text-center
+                h-20 p-3 rounded-2xl border-2 font-bold transition-all flex items-center justify-center text-center
                 ${isMatched ? 'bg-green-100 border-green-500 text-green-700 opacity-50' : 
                   isSelected ? 'bg-primary/10 border-primary text-primary shadow-md' : 
                   'bg-surface-container-lowest border-surface-container-highest text-on-surface hover:border-primary/40'}
               `}
             >
-              <span className={item.type === 'hanzi' ? 'text-3xl hanzi-display' : 'text-base'}>
+              <span className={item.type === 'hanzi' ? 'text-2xl hanzi-display' : 'text-sm'}>
                 {item.text}
               </span>
             </motion.button>

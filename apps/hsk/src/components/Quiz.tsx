@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Volume2, CheckCircle2, XCircle, Trophy, ArrowRight, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { hsk1Words, Word } from '../data/hsk1';
 import { playAudio } from '../utils/audio';
-import { addXP, completeLesson } from '../utils/progress';
+import { addXP, completeLesson, updateSRS } from '../utils/progress';
 
 type QuestionType = 
   | 'hanzi-to-vietnamese' 
@@ -31,7 +31,7 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
   const [isGameOver, setIsGameOver] = useState(false);
 
   // Generate 15 random questions
-  const generateQuestions = () => {
+  const generateQuestions = useCallback(() => {
     const pool = selectedLesson 
       ? hsk1Words.filter(w => w.lesson === selectedLesson)
       : hsk1Words;
@@ -79,11 +79,11 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
     setSelectedOption(null);
     setIsAnswered(false);
     setIsGameOver(false);
-  };
+  }, [selectedLesson]);
 
   useEffect(() => {
     generateQuestions();
-  }, [selectedLesson]);
+  }, [generateQuestions]);
 
   const handleOptionClick = (option: Word) => {
     if (isAnswered) return;
@@ -93,15 +93,17 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
     
     const currentQuestion = questions[currentIndex];
     const isCorrect = option.id === currentQuestion.word.id;
-    
+
     if (isCorrect) {
       setScore(prev => prev + 1);
       addXP(10);
       playAudio(currentQuestion.word.hanzi);
     } else {
-      // Vibrate if supported
       if (navigator.vibrate) navigator.vibrate(200);
     }
+
+    // Update SRS for this word
+    updateSRS(currentQuestion.word.id, isCorrect ? 5 : 1);
   };
 
   const handleNext = () => {
@@ -117,17 +119,21 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
     } else {
       setIsGameOver(true);
       
-      // Completion logic
-      if (score >= 8) {
+      // Completion logic — 80% pass threshold (12/15)
+      if (score >= 12) {
         if (selectedLesson) {
           completeLesson(selectedLesson);
         }
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#006C4A', '#4ade80', '#fbbf24']
-        });
+        try {
+          confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#006C4A', '#4ade80', '#fbbf24']
+          });
+        } catch (err) {
+          console.warn("Confetti animation failed:", err);
+        }
       }
     }
   };
@@ -243,9 +249,12 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
       case 'vietnamese-to-pinyin':
         return (
           <>
-            <span className="text-sm font-bold text-outline-variant uppercase tracking-widest mb-4 block">Phiên âm của "{currentQuestion.word.vietnamese}" là:</span>
-            <div className="text-4xl font-headline font-extrabold text-primary mb-4">
-              {currentQuestion.word.vietnamese}
+            <span className="text-sm font-bold text-outline-variant uppercase tracking-widest mb-4 block">Phiên âm của từ này là gì?</span>
+            <div className="text-4xl font-headline font-extrabold text-on-surface hanzi-display mb-2">
+              {currentQuestion.word.hanzi}
+            </div>
+            <div className="text-lg text-on-surface-variant font-medium">
+              ({currentQuestion.word.vietnamese})
             </div>
           </>
         );
@@ -289,7 +298,7 @@ export default function Quiz({ selectedLesson, setActiveTab }: { selectedLesson:
         <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-primary to-primary-fixed-dim rounded-full transition-all duration-300" 
-            style={{ width: `${((currentIndex) / questions.length) * 100}%` }}
+            style={{ width: `${questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0}%` }}
           ></div>
         </div>
       </div>

@@ -15,11 +15,26 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
   const writerRef = useRef<HanziWriter | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   
-  const words = selectedLesson 
+  const words = selectedLesson
     ? hsk1Words.filter(w => w.lesson === selectedLesson)
     : hsk1Words;
-    
+
+  if (words.length === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="px-6 pt-6 flex flex-col items-center justify-center min-h-[60vh]"
+      >
+        <p className="text-on-surface-variant font-medium">Không có từ nào trong bài học này.</p>
+      </motion.div>
+    );
+  }
+
   const currentWord = words[currentIndex];
+  const chars = currentWord.hanzi.split('');
+
+  const [activeCharIndex, setActiveCharIndex] = useState(0);
 
   // Initialize HanziWriter for the instructional display
   useEffect(() => {
@@ -28,22 +43,19 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
     // Clear previous writer
     writerContainerRef.current.innerHTML = '';
 
-    // Only take the first character if it's a multi-character word for the main display
-    const firstChar = currentWord.hanzi.charAt(0);
-
-    writerRef.current = HanziWriter.create(writerContainerRef.current, firstChar, {
+    writerRef.current = HanziWriter.create(writerContainerRef.current, chars[activeCharIndex], {
       width: 200,
       height: 200,
       padding: 10,
       strokeAnimationSpeed: 1,
       delayBetweenStrokes: 200,
-      strokeColor: '#006c4a', // primary color
+      strokeColor: '#006c4a',
       radicalColor: '#005237',
       showOutline: true,
-      outlineColor: '#e2e8f0', // surface-container-highest
+      outlineColor: '#e2e8f0',
     });
 
-  }, [currentWord]);
+  }, [currentWord, activeCharIndex]);
 
   const animateCharacter = () => {
     if (writerRef.current) {
@@ -127,11 +139,13 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
   const nextWord = () => {
     clearCanvas();
     addXP(10);
+    setActiveCharIndex(0);
     setCurrentIndex((prev) => (prev + 1) % words.length);
   };
 
   const prevWord = () => {
     clearCanvas();
+    setActiveCharIndex(0);
     setCurrentIndex((prev) => (prev - 1 + words.length) % words.length);
   };
 
@@ -182,6 +196,25 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
               </div>
               <div className="text-secondary text-base font-semibold mb-8">{currentWord.pinyin}</div>
               
+              {/* Character Tabs for multi-char words */}
+              {chars.length > 1 && (
+                <div className="flex gap-2 mb-2">
+                  {chars.map((char, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveCharIndex(idx)}
+                      className={`w-12 h-12 rounded-xl text-xl font-bold transition-all ${
+                        idx === activeCharIndex
+                          ? 'bg-primary text-on-primary shadow-md'
+                          : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
+                      }`}
+                    >
+                      {char}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Large Character Display with HanziWriter */}
               <div className="relative w-48 h-48 md:w-64 md:h-64 bg-surface-container-highest rounded-2xl flex items-center justify-center overflow-hidden mb-4">
                 {/* Background Grid */}
@@ -219,7 +252,7 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
                   <div className="w-1.5 h-8 bg-secondary rounded-full"></div>
                   <div>
                     <p className="text-xs font-bold uppercase text-on-surface-variant tracking-wider">Nghĩa tiếng Anh</p>
-                    <p className="text-sm text-on-surface font-medium">{currentWord.english}</p>
+                    <p className="text-sm text-on-surface font-medium">{currentWord.english || '—'}</p>
                   </div>
                 </div>
               </div>
@@ -242,7 +275,7 @@ export default function Write({ selectedLesson }: { selectedLesson: number | nul
             {/* Faint Character Background */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
               <span className="hanzi-display text-[15rem] md:text-[20rem] text-on-surface leading-none select-none">
-                {currentWord.hanzi}
+                {chars[activeCharIndex]}
               </span>
             </div>
 

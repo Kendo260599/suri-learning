@@ -155,7 +155,7 @@ export default function Practice({ selectedLesson }: { selectedLesson: number | 
                   <div>
                     <span className="text-sm font-bold text-outline-variant uppercase tracking-widest mb-1 block">English</span>
                     <span className="text-lg font-medium text-on-surface-variant">
-                      {currentWord.english}
+                      {currentWord.english || '—'}
                     </span>
                   </div>
                 </div>
@@ -177,11 +177,11 @@ export default function Practice({ selectedLesson }: { selectedLesson: number | 
             </div>
             <div className="flex flex-col items-center">
               <span className="font-bold text-sm text-on-surface">Chưa thuộc</span>
-              <span className="text-[10px] text-error font-bold uppercase tracking-widest mt-1">&lt; 1 phút</span>
+              <span className="text-[10px] text-error font-bold uppercase tracking-widest mt-1">1 ngày</span>
             </div>
           </button>
 
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); nextCard(3); }}
             className="group flex flex-col items-center gap-3 p-4 flex-1 rounded-[1.5rem] bg-surface-container-lowest border border-surface-container-high hover:bg-primary-container/10 hover:border-primary-container/30 transition-all"
           >
@@ -194,7 +194,7 @@ export default function Practice({ selectedLesson }: { selectedLesson: number | 
             </div>
           </button>
 
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); nextCard(5); }}
             className="group flex flex-col items-center gap-3 p-4 flex-1 rounded-[1.5rem] bg-surface-container-lowest border border-surface-container-high hover:bg-secondary-container/10 hover:border-secondary-container/30 transition-all"
           >
@@ -203,7 +203,7 @@ export default function Practice({ selectedLesson }: { selectedLesson: number | 
             </div>
             <div className="flex flex-col items-center">
               <span className="font-bold text-sm text-on-surface">Quá dễ</span>
-              <span className="text-[10px] text-secondary font-bold uppercase tracking-widest mt-1">4 ngày</span>
+              <span className="text-[10px] text-secondary font-bold uppercase tracking-widest mt-1">6 ngày</span>
             </div>
           </button>
         </div>

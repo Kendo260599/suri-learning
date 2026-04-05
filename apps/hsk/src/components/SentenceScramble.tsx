@@ -18,29 +18,38 @@ export default function SentenceScramble({ selectedLesson, setActiveTab }: { sel
   const [lessonSentences, setLessonSentences] = useState<Sentence[]>([]);
 
   const generateGame = () => {
-    const pool = selectedLesson 
+    const pool = selectedLesson
       ? hsk1Sentences.filter(s => s.lesson === selectedLesson)
       : hsk1Sentences;
-      
+
     if (pool.length === 0) {
-      // Fallback if no sentences for this lesson
-      setLessonSentences(hsk1Sentences.slice(0, 3));
+      // Both pool and hsk1Sentences are empty — nothing to play
+      if (hsk1Sentences.length === 0) {
+        setLessonSentences([]);
+        setCurrentSentence(null);
+        setShuffledWords([]);
+        setSelectedWords([]);
+        setIsCorrect(null);
+        setIsGameOver(true);
+      } else {
+        const fallback = hsk1Sentences.slice(0, 3);
+        setLessonSentences(fallback);
+        setCurrentIndex(0);
+        setIsGameOver(false);
+        setupSentence(fallback[0]);
+      }
     } else {
       setLessonSentences(pool);
+      setCurrentIndex(0);
+      setIsGameOver(false);
+      setupSentence(pool[0]);
     }
-    
-    setCurrentIndex(0);
-    setIsGameOver(false);
-    setupSentence(pool[0] || hsk1Sentences[0]);
   };
 
   const setupSentence = (sentence: Sentence) => {
     setCurrentSentence(sentence);
-    // Simple split by character for HSK1, or better would be word segmentation but let's keep it simple
-    // For HSK1, most "words" are 1-2 characters. Let's split by common words or just characters for now.
-    // A better way is to have the words pre-split in the data, but let's try a simple heuristic.
-    const words = sentence.hanzi.replace(/[。？！，]/g, '').split('');
-    setShuffledWords([...words].sort(() => 0.5 - Math.random()));
+    // Use pre-split segments from data — proper word segmentation
+    setShuffledWords([...sentence.segments].sort(() => 0.5 - Math.random()));
     setSelectedWords([]);
     setIsCorrect(null);
   };
@@ -68,8 +77,8 @@ export default function SentenceScramble({ selectedLesson, setActiveTab }: { sel
   const checkAnswer = () => {
     if (!currentSentence) return;
     const answer = selectedWords.join('');
-    const target = currentSentence.hanzi.replace(/[。？！，]/g, '');
-    
+    const target = currentSentence.segments.join('');
+
     if (answer === target) {
       setIsCorrect(true);
       addXP(15);

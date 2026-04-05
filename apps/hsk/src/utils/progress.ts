@@ -1,7 +1,22 @@
 export const getProgress = () => {
-  const progress = localStorage.getItem('hsk_progress');
-  if (progress) {
-    return JSON.parse(progress);
+  try {
+    const progress = localStorage.getItem('hsk_progress');
+    if (progress) {
+      const parsed = JSON.parse(progress);
+      // Validate structure
+      if (typeof parsed === 'object' && parsed !== null) {
+        return {
+          xp: typeof parsed.xp === 'number' ? parsed.xp : 0,
+          streak: typeof parsed.streak === 'number' ? parsed.streak : 0,
+          lastActive: typeof parsed.lastActive === 'string' ? parsed.lastActive : null,
+          completedLessons: Array.isArray(parsed.completedLessons) ? parsed.completedLessons : [],
+          masteredWords: Array.isArray(parsed.masteredWords) ? parsed.masteredWords : [],
+          srsData: (typeof parsed.srsData === 'object' && parsed.srsData !== null) ? parsed.srsData : {},
+        };
+      }
+    }
+  } catch {
+    // Corrupted localStorage — reset
   }
   return {
     xp: 0,
@@ -97,8 +112,7 @@ export const updateSRS = (wordId: string, q: number) => {
     wordData.interval = 1;
   }
 
-  wordData.efactor = wordData.efactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
-  if (wordData.efactor < 1.3) wordData.efactor = 1.3;
+  wordData.efactor = Math.max(1.3, Math.min(2.5, wordData.efactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))));
 
   const nextDate = new Date();
   nextDate.setDate(nextDate.getDate() + wordData.interval);
@@ -120,7 +134,7 @@ export const getDueWordsCount = () => {
   if (!progress.srsData) return 0;
   
   const now = new Date();
-  return Object.values(progress.srsData).filter((data: any) => {
-    return new Date(data.nextReview) <= now;
+  return Object.values(progress.srsData).filter((data) => {
+    return new Date((data as { nextReview: string }).nextReview) <= now;
   }).length;
 };

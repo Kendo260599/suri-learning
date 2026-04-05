@@ -19,18 +19,14 @@ export default function Home({ setActiveTab, setSelectedLesson }: { setActiveTab
   // Group words by lesson
   const lessons = Array.from(new Set(hsk1Words.map(w => w.lesson))).sort((a, b) => a - b);
 
-  const lessonTitles: Record<number, string> = {
-    1: "Số đếm cơ bản",
-    2: "Chào hỏi & Quốc gia",
-    3: "Gia đình & Đại từ",
-    4: "Thời gian & Lịch",
-    5: "Đồ ăn & Thức uống",
-    6: "Địa điểm & Trường học",
-    7: "Mua sắm & Giá cả",
-    8: "Sở thích & Giải trí",
-    9: "Giao thông & Thành phố",
-    10: "Mô tả & Tính cách"
-  };
+  const lessonTitles: Record<number, string> = {};
+  for (let i = 1; i <= lessons.length; i++) {
+    const words = hsk1Words.filter(w => w.lesson === i);
+    if (words.length === 0) continue;
+    const cats = [...new Set(words.map(w => w.category))];
+    const cat = cats.length === 1 ? cats[0] : cats[0] + (cats.length > 1 ? `, ${cats[1]}` : '');
+    lessonTitles[i] = cat.charAt(0).toUpperCase() + cat.slice(1);
+  }
 
   const handleAction = (lessonId: number, tab: string) => {
     setSelectedLesson(lessonId);

@@ -15,6 +15,7 @@ export default function LiveTutor() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const isMutedRef = useRef(false);
   const sessionRef = useRef<any>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -24,13 +25,33 @@ export default function LiveTutor() {
     }
   }, [transcription, aiResponse]);
 
+  useEffect(() => {
+    return () => {
+      stopSession();
+    };
+  }, []);
+
+  const MAX_MESSAGES = 50;
+
+  const addTranscription = (msg: string) => {
+    setTranscription(prev => {
+      const next = [...prev, msg];
+      return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next;
+    });
+  };
+
   const startSession = async () => {
-    setIsConnecting(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        alert("Vui lòng cấu hình GEMINI_API_KEY trong biến môi trường.");
+        setIsConnecting(false);
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       
       const session = await ai.live.connect({
-        model: "gemini-3.1-flash-live-preview",
+        model: "gemini-2.0-flash-live",
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
@@ -57,12 +78,18 @@ export default function LiveTutor() {
 
             const inputTranscription = message.serverContent?.userTurn?.parts[0]?.text;
             if (inputTranscription) {
-              setTranscription(prev => [...prev, `Bạn: ${inputTranscription}`]);
+              setTranscription(prev => {
+                const next = [...prev, `Bạn: ${inputTranscription}`];
+                return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next;
+              });
             }
             
             const outputTranscription = message.serverContent?.modelTurn?.parts[0]?.text;
             if (outputTranscription && message.serverContent?.modelTurn?.parts[0]?.text?.endsWith('.')) {
-               setTranscription(prev => [...prev, `AI: ${outputTranscription}`]);
+               setTranscription(prev => {
+                 const next = [...prev, `AI: ${outputTranscription}`];
+                 return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next;
+               });
                setAiResponse("");
             }
           },
@@ -109,7 +136,7 @@ export default function LiveTutor() {
       processorRef.current = processor;
       
       processor.onaudioprocess = (e) => {
-        if (isMuted || !sessionRef.current) return;
+        if (isMutedRef.current || !sessionRef.current) return;
         
         const inputData = e.inputBuffer.getChannelData(0);
         // Convert Float32 to Int16 PCM
@@ -119,9 +146,13 @@ export default function LiveTutor() {
         }
         
         const base64Data = btoa(String.fromCharCode(...new Uint8Array(pcmData.buffer)));
-        sessionRef.current.sendRealtimeInput({
-          audio: { data: base64Data, mimeType: 'audio/pcm;rate=16000' }
-        });
+        try {
+          sessionRef.current?.sendRealtimeInput({
+            audio: { data: base64Data, mimeType: 'audio/pcm;rate=16000' }
+          });
+        } catch {
+          // Session may have closed
+        }
       };
       
       source.connect(processor);
@@ -177,7 +208,10 @@ export default function LiveTutor() {
           
           {isActive && (
             <button 
-              onClick={() => setIsMuted(!isMuted)}
+              onClick={() => {
+                setIsMuted(!isMuted);
+                isMutedRef.current = !isMuted;
+              }}
               className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'}`}
             >
               {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
@@ -245,7 +279,7 @@ export default function LiveTutor() {
               className="p-6 bg-surface-container-low border-t border-surface-container-highest flex flex-col items-center gap-4"
             >
               <div className="flex items-center gap-6">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${isMuted ? 'bg-error/20 text-error' : 'bg-primary shadow-lg shadow-primary/30 text-on-primary scale-110'}`}>
+                <div aria-label={isMuted ? "Bật microphone" : "Tắt microphone"} role="button" tabIndex={0} onClick={() => { setIsMuted(!isMuted); isMutedRef.current = !isMuted; }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setIsMuted(!isMuted); isMutedRef.current = !isMuted; } }} className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${isMuted ? 'bg-error/20 text-error' : 'bg-primary shadow-lg shadow-primary/30 text-on-primary scale-110'}`}>
                   {isMuted ? <MicOff className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
                 </div>
                 <button 

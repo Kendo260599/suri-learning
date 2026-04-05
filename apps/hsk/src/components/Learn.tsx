@@ -1,49 +1,62 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Volume2, BookOpen, Gamepad2, Sparkles, Wand2, Play, Loader2, MessageSquare } from 'lucide-react';
 import { hsk1Words } from '../data/hsk1';
 import { playAudio } from '../utils/audio';
-import { addXP, completeLesson } from '../utils/progress';
+import { addXP, completeLesson, getProgress } from '../utils/progress';
 import { generateGrammarExplanation, generateAIAudio, generatePracticeSentence } from '../services/GeminiService';
 import Markdown from 'react-markdown';
 
 export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson: number | null, setActiveTab: (tab: string) => void }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all'); // all, unlearned, mastered
+  const [progress, setProgress] = useState(getProgress());
+  const lastXPRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    setProgress(getProgress());
+  }, []);
+
   const [grammarExplanation, setGrammarExplanation] = useState<string | null>(null);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
   const [aiAudioLoading, setAiAudioLoading] = useState<string | null>(null);
-  const [practiceSentence, setPracticeSentence] = useState<any | null>(null);
+  const [practiceSentence, setPracticeSentence] = useState<{ hanzi: string; pinyin: string; vietnamese: string; english: string } | null>(null);
   const [loadingSentence, setLoadingSentence] = useState(false);
 
   const filteredWords = hsk1Words.filter(word => {
-    const matchesSearch = 
-      word.hanzi.includes(searchTerm) || 
-      word.pinyin.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch =
+      word.hanzi.includes(searchTerm) ||
+      word.pinyin.toLowerCase().includes(searchTerm.toLowerCase()) ||
       word.vietnamese.toLowerCase().includes(searchTerm.toLowerCase()) ||
       word.english.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesLesson = selectedLesson ? word.lesson === selectedLesson : true;
-    
-    return matchesSearch && matchesLesson;
+
+    const isMastered = progress.masteredWords?.includes(word.id);
+    const matchesFilter =
+      filter === 'all' ||
+      (filter === 'mastered' && isMastered) ||
+      (filter === 'unlearned' && !isMastered);
+
+    return matchesSearch && matchesLesson && matchesFilter;
   });
 
   useEffect(() => {
     if (selectedLesson && !grammarExplanation) {
       loadGrammar();
     }
-  }, [selectedLesson]);
+  }, [selectedLesson, grammarExplanation, loadGrammar]);
 
-  const loadGrammar = async () => {
+  const loadGrammar = useCallback(async () => {
     if (!selectedLesson) return;
     setLoadingGrammar(true);
     const lessonTitle = `Bài ${selectedLesson}`;
     const explanation = await generateGrammarExplanation(selectedLesson, lessonTitle, filteredWords);
     setGrammarExplanation(explanation ?? null);
     setLoadingGrammar(false);
-  };
+  }, [selectedLesson, filteredWords]);
 
   const handlePlayAIAudio = async (text: string, id: string) => {
     setAiAudioLoading(id);
@@ -192,8 +205,10 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:max-w-md group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-outline w-5 h-5 group-focus-within:text-primary transition-colors" />
-            <input 
+            <input
               type="text"
+              role="searchbox"
+              aria-label="Tìm kiếm từ vựng"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border border-surface-container-highest rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-container transition-all text-on-surface placeholder:text-outline/60 font-medium shadow-sm"
@@ -231,7 +246,11 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
             key={word.id}
             onClick={() => {
               playAudio(word.hanzi);
-              addXP(2);
+              const now = Date.now();
+              if (!lastXPRef.current[word.id] || now - lastXPRef.current[word.id] > 1000) {
+                addXP(2);
+                lastXPRef.current[word.id] = now;
+              }
             }}
             className="group relative bg-surface-container-lowest p-6 rounded-[1.5rem] transition-all duration-300 hover:shadow-[0px_15px_30px_rgba(0,108,74,0.08)] flex flex-col justify-between border border-surface-container-highest hover:border-primary-container/40 cursor-pointer"
           >
@@ -258,7 +277,7 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
             
             <div>
               <p className="text-on-surface font-bold text-lg mb-1">{word.vietnamese}</p>
-              <p className="text-on-surface-variant text-sm font-medium mb-5">{word.english}</p>
+              <p className="text-on-surface-variant text-sm font-medium mb-5">{word.english || '—'}</p>
               
               <div className="flex items-center justify-between mt-auto pt-4 border-t border-surface-container-highest">
                 <div className="flex gap-2">
