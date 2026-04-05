@@ -43,12 +43,6 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
     return matchesSearch && matchesLesson && matchesFilter;
   });
 
-  useEffect(() => {
-    if (selectedLesson && !grammarExplanation) {
-      loadGrammar();
-    }
-  }, [selectedLesson, grammarExplanation, loadGrammar]);
-
   const loadGrammar = useCallback(async () => {
     if (!selectedLesson) return;
     setLoadingGrammar(true);
@@ -57,6 +51,12 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
     setGrammarExplanation(explanation ?? null);
     setLoadingGrammar(false);
   }, [selectedLesson, filteredWords]);
+
+  useEffect(() => {
+    if (selectedLesson && !grammarExplanation) {
+      loadGrammar();
+    }
+  }, [selectedLesson, grammarExplanation, loadGrammar]);
 
   const handlePlayAIAudio = async (text: string, id: string) => {
     setAiAudioLoading(id);
