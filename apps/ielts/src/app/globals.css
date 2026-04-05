@@ -121,3 +121,162 @@ body {
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }
+
+/* ============================================
+   HSK MODULE — Color Scheme & Utilities
+   ============================================ */
+.hsk-module {
+  --hsk-primary: #006c4a;
+  --hsk-primary-container: #3fb687;
+  --hsk-on-primary: #ffffff;
+  --hsk-on-primary-container: #00422c;
+
+  --hsk-surface: #f4fbf4;
+  --hsk-surface-lowest: #ffffff;
+  --hsk-surface-low: #eef6ee;
+  --hsk-surface-container: #e8f0e9;
+  --hsk-surface-high: #e3eae3;
+  --hsk-surface-highest: #dde4dd;
+
+  --hsk-on-surface: #161d19;
+  --hsk-on-surface-variant: #3c4a42;
+
+  --hsk-secondary: #0058be;
+  --hsk-secondary-container: #2170e4;
+  --hsk-on-secondary: #ffffff;
+  --hsk-on-secondary-container: #fefcff;
+
+  --hsk-error: #ba1a1a;
+  --hsk-error-container: #ffdad6;
+  --hsk-on-error: #ffffff;
+  --hsk-on-error-container: #93000a;
+
+  --hsk-outline: #6c7a71;
+  --hsk-outline-variant: #bbcabf;
+  --hsk-tertiary-container: #e4c452;
+  --hsk-on-tertiary-container: #3a3000;
+}
+
+/* HSK Tailwind utility aliases */
+.hsk-module .text-primary       { color: var(--hsk-primary); }
+.hsk-module .bg-primary         { background-color: var(--hsk-primary); }
+.hsk-module .bg-primary\/10     { background-color: color-mix(in srgb, var(--hsk-primary) 10%, transparent); }
+.hsk-module .bg-primary\/5      { background-color: color-mix(in srgb, var(--hsk-primary) 5%, transparent); }
+.hsk-module .text-on-primary     { color: var(--hsk-on-primary); }
+.hsk-module .fill-primary       { fill: var(--hsk-primary); }
+
+.hsk-module .bg-primary-container { background-color: var(--hsk-primary-container); }
+.hsk-module .text-primary-container { color: var(--hsk-primary-container); }
+.hsk-module .fill-primary-container { fill: var(--hsk-primary-container); }
+.hsk-module .bg-primary-container\/10 { background-color: color-mix(in srgb, var(--hsk-primary-container) 10%, transparent); }
+.hsk-module .bg-primary-container\/15 { background-color: color-mix(in srgb, var(--hsk-primary-container) 15%, transparent); }
+.hsk-module .text-on-primary-container { color: var(--hsk-on-primary-container); }
+
+.hsk-module .bg-secondary-container { background-color: var(--hsk-secondary-container); }
+.hsk-module .text-secondary-container { color: var(--hsk-secondary-container); }
+.hsk-module .text-secondary-container\/10 { color: color-mix(in srgb, var(--hsk-secondary-container) 10%, transparent); }
+.hsk-module .bg-secondary-container\/5 { background-color: color-mix(in srgb, var(--hsk-secondary-container) 5%, transparent); }
+.hsk-module .bg-secondary-container\/10 { background-color: color-mix(in srgb, var(--hsk-secondary-container) 10%, transparent); }
+.hsk-module .bg-secondary-container\/20 { background-color: color-mix(in srgb, var(--hsk-secondary-container) 20%, transparent); }
+.hsk-module .text-on-secondary-container { color: var(--hsk-on-secondary-container); }
+.hsk-module .text-secondary       { color: var(--hsk-secondary); }
+.hsk-module .bg-secondary\/10     { background-color: color-mix(in srgb, var(--hsk-secondary) 10%, transparent); }
+.hsk-module .text-on-secondary    { color: var(--hsk-on-secondary); }
+
+.hsk-module .bg-error-container   { background-color: var(--hsk-error-container); }
+.hsk-module .text-error-container { color: var(--hsk-error-container); }
+.hsk-module .bg-error-container\/10 { background-color: color-mix(in srgb, var(--hsk-error-container) 10%, transparent); }
+.hsk-module .bg-error-container\/30 { background-color: color-mix(in srgb, var(--hsk-error-container) 30%, transparent); }
+.hsk-module .text-error           { color: var(--hsk-error); }
+.hsk-module .text-error\/10       { color: color-mix(in srgb, var(--hsk-error) 10%, transparent); }
+.hsk-module .text-on-error        { color: var(--hsk-on-error); }
+
+.hsk-module .bg-surface-container-lowest { background-color: var(--hsk-surface-lowest); }
+.hsk-module .bg-surface-container-low     { background-color: var(--hsk-surface-low); }
+.hsk-module .bg-surface-container        { background-color: var(--hsk-surface-container); }
+.hsk-module .bg-surface-container-high    { background-color: var(--hsk-surface-high); }
+.hsk-module .bg-surface-container-highest { background-color: var(--hsk-surface-highest); }
+.hsk-module .border-surface-container-high    { border-color: var(--hsk-surface-high); }
+.hsk-module .border-surface-container-highest { border-color: var(--hsk-surface-highest); }
+.hsk-module .bg-surface-container-high\/10     { background-color: color-mix(in srgb, var(--hsk-surface-high) 10%, transparent); }
+
+.hsk-module .text-on-surface         { color: var(--hsk-on-surface); }
+.hsk-module .text-on-surface-variant { color: var(--hsk-on-surface-variant); }
+.hsk-module .text-on-surface-variant\/60 { color: color-mix(in srgb, var(--hsk-on-surface-variant) 60%, transparent); }
+.hsk-module .text-on-surface-fixed   { color: var(--hsk-on-surface-fixed); }
+.hsk-module .text-on-surface-fixed-variant { color: var(--hsk-on-surface-fixed-variant); }
+
+.hsk-module .text-outline            { color: var(--hsk-outline); }
+.hsk-module .text-outline-variant    { color: var(--hsk-outline-variant); }
+.hsk-module .bg-tertiary-container   { background-color: var(--hsk-tertiary-container); }
+.hsk-module .text-tertiary-container { color: var(--hsk-tertiary-container); }
+.hsk-module .fill-tertiary-container { fill: var(--hsk-tertiary-container); }
+.hsk-module .text-on-tertiary-container { color: var(--hsk-on-tertiary-container); }
+
+.hsk-module .text-primary\/10   { color: color-mix(in srgb, var(--hsk-primary) 10%, transparent); }
+.hsk-module .text-primary\/20   { color: color-mix(in srgb, var(--hsk-primary) 20%, transparent); }
+.hsk-module .text-primary\/5    { color: color-mix(in srgb, var(--hsk-primary) 5%, transparent); }
+.hsk-module .border-primary\/10  { border-color: color-mix(in srgb, var(--hsk-primary) 10%, transparent); }
+.hsk-module .border-primary\/20  { border-color: color-mix(in srgb, var(--hsk-primary) 20%, transparent); }
+.hsk-module .border-primary\/40  { border-color: color-mix(in srgb, var(--hsk-primary) 40%, transparent); }
+.hsk-module .border-primary-container\/20 { border-color: color-mix(in srgb, var(--hsk-primary-container) 20%, transparent); }
+.hsk-module .border-primary-container\/30 { border-color: color-mix(in srgb, var(--hsk-primary-container) 30%, transparent); }
+.hsk-module .border-primary-container\/40 { border-color: color-mix(in srgb, var(--hsk-primary-container) 40%, transparent); }
+.hsk-module .border-secondary-container\/10 { border-color: color-mix(in srgb, var(--hsk-secondary-container) 10%, transparent); }
+.hsk-module .border-secondary-container\/20 { border-color: color-mix(in srgb, var(--hsk-secondary-container) 20%, transparent); }
+.hsk-module .border-error-container\/30 { border-color: color-mix(in srgb, var(--hsk-error-container) 30%, transparent); }
+.hsk-module .text-secondary\/90    { color: color-mix(in srgb, var(--hsk-secondary) 90%, transparent); }
+.hsk-module .bg-on-primary\/20     { background-color: color-mix(in srgb, var(--hsk-on-primary) 20%, transparent); }
+
+.hsk-module .text-green-500  { color: #22c55e; }
+.hsk-module .bg-green-500    { background-color: #22c55e; }
+.hsk-module .bg-green-100    { background-color: #dcfce7; }
+.hsk-module .text-green-700  { color: #15803d; }
+.hsk-module .text-green-50   { color: #f0fdf4; }
+.hsk-module .text-yellow-500 { color: #eab308; }
+.hsk-module .fill-yellow-500  { fill: #eab308; }
+.hsk-module .bg-yellow-100    { background-color: #fef9c3; }
+.hsk-module .text-yellow-700  { color: #a16207; }
+.hsk-module .text-orange-500  { color: #f97316; }
+.hsk-module .fill-orange-500  { fill: #f97316; }
+.hsk-module .text-blue-500    { color: #3b82f6; }
+.hsk-module .bg-blue-500      { background-color: #3b82f6; }
+.hsk-module .text-purple-500  { color: #a855f7; }
+.hsk-module .bg-purple-500    { background-color: #a855f7; }
+.hsk-module .bg-primary-fixed  { background-color: #3fb687; }
+.hsk-module .bg-primary-fixed-dim { background-color: #007a59; }
+.hsk-module .text-primary-fixed { color: #3fb687; }
+
+.hsk-module .shadow-primary\/20 { --tw-shadow-color: color-mix(in srgb, var(--hsk-primary) 20%, transparent); }
+.hsk-module .shadow-primary\/06 { --tw-shadow-color: color-mix(in srgb, var(--hsk-primary) 6%, transparent); }
+.hsk-module .shadow-primary\/04 { --tw-shadow-color: color-mix(in srgb, var(--hsk-primary) 4%, transparent); }
+.hsk-module .shadow-primary-container\/20 { --tw-shadow-color: color-mix(in srgb, var(--hsk-primary-container) 20%, transparent); }
+.hsk-module .shadow-primary-container\/30 { --tw-shadow-color: color-mix(in srgb, var(--hsk-primary-container) 30%, transparent); }
+.hsk-module .shadow-secondary-container\/20 { --tw-shadow-color: color-mix(in srgb, var(--hsk-secondary-container) 20%, transparent); }
+
+/* HSK font utilities */
+.hsk-module .font-headline {
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
+.hsk-module .font-body {
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+.hsk-module .hanzi-display {
+  font-family: "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.2;
+}
+.hsk-module .hanzi-serif {
+  font-family: "Ma Shan Zheng", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* HSK scrollbar hide */
+.hsk-module .no-scrollbar::-webkit-scrollbar { display: none; }
+.hsk-module .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* HSK dark mode — keep green theme */
+.hsk-module {
+  background-color: var(--hsk-surface);
+  color: var(--hsk-on-surface);
+  min-height: 100vh;
+}
