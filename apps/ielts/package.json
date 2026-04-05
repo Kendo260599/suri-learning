@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port=3000",
-    "build": "cd ../.. && npx next build apps/ielts",
+    "build": "next build",
     "start": "next start",
     "preview": "next preview",
     "clean": "rmdir /s /q .next 2>nul & rmdir /s /q dist 2>nul & echo Done",
