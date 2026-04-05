@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port=3000",
-    "build": "next build",
+    "build": "cd ../.. && npx next build apps/ielts",
     "start": "next start",
     "preview": "next preview",
     "clean": "rmdir /s /q .next 2>nul & rmdir /s /q dist 2>nul & echo Done",
@@ -16,6 +16,28 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"
+  },
+  "optionalDependencies": {
+    "@next/swc-darwin-arm64": "16.2.2",
+    "@next/swc-darwin-x64": "16.2.2",
+    "@next/swc-linux-arm64-gnu": "16.2.2",
+    "@next/swc-linux-arm64-musl": "16.2.2",
+    "@next/swc-linux-x64-gnu": "16.2.2",
+    "@next/swc-linux-x64-musl": "16.2.2",
+    "@next/swc-win32-arm64-msvc": "16.2.2",
+    "@next/swc-win32-x64-msvc": "16.2.2",
+    "@tailwindcss/oxide-android-arm64": "4.2.2",
+    "@tailwindcss/oxide-darwin-arm64": "4.2.2",
+    "@tailwindcss/oxide-darwin-x64": "4.2.2",
+    "@tailwindcss/oxide-freebsd-x64": "4.2.2",
+    "@tailwindcss/oxide-linux-arm-gnueabihf": "4.2.2",
+    "@tailwindcss/oxide-linux-arm64-gnu": "4.2.2",
+    "@tailwindcss/oxide-linux-arm64-musl": "4.2.2",
+    "@tailwindcss/oxide-linux-x64-gnu": "4.2.2",
+    "@tailwindcss/oxide-linux-x64-musl": "4.2.2",
+    "@tailwindcss/oxide-wasm32-wasi": "4.2.2",
+    "@tailwindcss/oxide-win32-arm64-msvc": "4.2.2",
+    "@tailwindcss/oxide-win32-x64-msvc": "4.2.2"
   },
   "dependencies": {
     "@firebase-oss/ui-react": "^7.0.2-beta",
