@@ -12,6 +12,7 @@ import Markdown from 'react-markdown';
 export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson: number | null, setActiveTab: (tab: string) => void }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all'); // all, unlearned, mastered
+  const [typeFilter, setTypeFilter] = useState<'all' | 'single' | 'compound'>('all'); // NEW: HSK 3.0 type filter
   const [progress, setProgress] = useState(getProgress());
   const lastXPRef = useRef<Record<string, number>>({});
 
@@ -21,6 +22,7 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
 
   const [grammarExplanation, setGrammarExplanation] = useState<string | null>(null);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
+  const [grammarError, setGrammarError] = useState<string | null>(null);
   const [aiAudioLoading, setAiAudioLoading] = useState<string | null>(null);
   const [practiceSentence, setPracticeSentence] = useState<{ hanzi: string; pinyin: string; vietnamese: string; english: string } | null>(null);
   const [loadingSentence, setLoadingSentence] = useState(false);
@@ -40,16 +42,26 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
       (filter === 'mastered' && isMastered) ||
       (filter === 'unlearned' && !isMastered);
 
-    return matchesSearch && matchesLesson && matchesFilter;
+    const matchesType = typeFilter === 'all' || word.type === typeFilter;
+
+    return matchesSearch && matchesLesson && matchesFilter && matchesType;
   });
 
   const loadGrammar = useCallback(async () => {
     if (!selectedLesson) return;
     setLoadingGrammar(true);
-    const lessonTitle = `Bài ${selectedLesson}`;
-    const explanation = await generateGrammarExplanation(selectedLesson, lessonTitle, filteredWords);
-    setGrammarExplanation(explanation ?? null);
-    setLoadingGrammar(false);
+    setGrammarError(null);
+    try {
+      const lessonTitle = `Bài ${selectedLesson}`;
+      const explanation = await generateGrammarExplanation(selectedLesson, lessonTitle, filteredWords);
+      setGrammarExplanation(explanation ?? null);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Lỗi khi tải giải thích ngữ pháp";
+      setGrammarError(msg);
+      console.error("loadGrammar error:", err);
+    } finally {
+      setLoadingGrammar(false);
+    }
   }, [selectedLesson, filteredWords]);
 
   useEffect(() => {
@@ -96,7 +108,7 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
             <span className="bg-on-primary/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold font-label uppercase tracking-widest">
               HSK 1 • Msutong
             </span>
-            <span className="text-sm font-medium opacity-90">{hsk1Words.length} Từ vựng</span>
+            <span className="text-sm font-medium opacity-90">{filteredWords.length}/{hsk1Words.length} Từ vựng</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-headline font-extrabold mb-3">Từ vựng thiết yếu</h2>
           <p className="text-primary-fixed max-w-md text-sm md:text-base leading-relaxed opacity-90 font-medium">
@@ -126,6 +138,20 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
             <div className="flex flex-col items-center py-10 gap-4">
               <Loader2 className="w-8 h-8 text-primary animate-spin" />
               <p className="text-sm font-medium text-on-surface-variant">AI đang phân tích bài học...</p>
+            </div>
+          ) : grammarError ? (
+            <div className="flex flex-col items-center py-8 gap-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-medium text-on-surface-variant max-w-sm">{grammarError}</p>
+              <p className="text-xs text-on-surface-variant/60">Tính năng AI yêu cầu GEMINI_API_KEY. Kiểm tra biến môi trường trên Vercel.</p>
+              <button
+                onClick={loadGrammar}
+                className="mt-2 px-5 py-2 bg-primary text-on-primary rounded-xl font-bold text-sm hover:bg-primary-container transition-all"
+              >
+                Thử lại
+              </button>
             </div>
           ) : (
             <div className="prose prose-slate max-w-none prose-headings:font-headline prose-headings:text-primary prose-p:text-on-surface-variant prose-p:font-medium prose-strong:text-primary">
@@ -199,6 +225,28 @@ export default function Learn({ selectedLesson, setActiveTab }: { selectedLesson
           </AnimatePresence>
         </section>
       )}
+
+      {/* HSK 3.0 Type Filter */}
+      <div className="mb-4 flex gap-2 flex-wrap">
+        <button
+          onClick={() => setTypeFilter('all')}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${typeFilter === 'all' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface-variant border border-surface-container-highest hover:bg-surface-container-highest'}`}
+        >
+          Tất cả ({hsk1Words.length})
+        </button>
+        <button
+          onClick={() => setTypeFilter('single')}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${typeFilter === 'single' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface-variant border border-surface-container-highest hover:bg-surface-container-highest'}`}
+        >
+          Từ đơn ({hsk1Words.filter(w => w.type === 'single').length})
+        </button>
+        <button
+          onClick={() => setTypeFilter('compound')}
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${typeFilter === 'compound' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface-variant border border-surface-container-highest hover:bg-surface-container-highest'}`}
+        >
+          Từ ghép ({hsk1Words.filter(w => w.type === 'compound').length})
+        </button>
+      </div>
 
       {/* Search and Filters */}
       <div className="sticky top-0 md:top-4 z-30 bg-surface/90 backdrop-blur-md py-4 mb-6 -mx-6 px-6 md:mx-0 md:px-0">
